@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Radar Chart Generator</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 20px;
+        }
+        form {
+            margin-bottom: 30px;
+        }
+        .slider-label {
+            margin: 10px 0;
+        }
+        .slider {
+            width: 100%;
+            margin: 10px 0;
+        }
+        img {
+            margin-top: 20px;
+            max-width: 100%;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>Radar Chart Generator</h1>
+    <form action="/generate_chart" method="POST">
+        {% for i in range(1, 10) %}
+        <div class="slider-container">
+            <label class="slider-label" for="slider{{i}}">Critère {{i}} :</label>
+            <input type="range" id="slider{{i}}" name="slider{{i}}" class="slider" min="0" max="10" value="5">
+        </div>
+        {% endfor %}
+        <button type="submit">Générer le Radar Chart</button>
+    </form>
+    
+    {% if image_path %}
+    <h2>Résultat :</h2>
+    <img src="{{ image_path }}" alt="Radar Chart">
+    <p>Valeurs utilisées : {{ values }}</p>
+    {% endif %}
+</div>
+
+</body>
+</html>
