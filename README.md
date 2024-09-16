@@ -30,13 +30,14 @@ This is a simple web application built with Flask that generates radar charts ba
 
 2.	**Create and activate a virtual environment:**
 
+```
 python -m venv venv
 source venv/bin/activate  # On Windows: venv\Scripts\activate
-
+```
 
 3.	**Install dependencies:**
 
-pip install -r requirements.txt
+`pip install -r requirements.txt`
 
 
 
@@ -45,11 +46,11 @@ Running Locally
 1.	**Start the application:**
 For development (Flask):
 
-python app.py
+`python app.py`
 
 For production (Gunicorn):
 
-gunicorn app:app
+`gunicorn app:app`
 
 
 2.	**Access the app:**
@@ -67,7 +68,7 @@ Deploying to Railway
 	2.	Ensure your project has the following files:
 	•	Procfile:
 
-web: gunicorn app:app
+`web: gunicorn app:app`
 
 
 	•	requirements.txt with all dependencies listed.
