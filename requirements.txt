@@ -1,4 +1,3 @@
 Flask
 plotly
 gunicorn
-pip freeze > requirements.txt
