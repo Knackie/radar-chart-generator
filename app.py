@@ -54,4 +54,4 @@ def generate_chart():
     return render_template('index.html', image_path=img_path, values=values)
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run()
