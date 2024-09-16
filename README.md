@@ -76,7 +76,7 @@ Deploying to Railway
 	3.	Railway will handle the rest and provide a public URL for your app.
 
 Project Structure
-
+```
 radar-chart-generator/
 ├── app.py                   # Main Flask app code
 ├── Procfile                 # Instructions for running on Railway/Heroku
@@ -86,7 +86,7 @@ radar-chart-generator/
 ├── templates/
 │   └── index.html           # HTML interface
 ├── README.md                # This file
-
+```
 Customization
 
 	•	Criterion Titles: Users can customize the titles. Default titles (e.g., “Criterion 1”) are applied if left blank.
