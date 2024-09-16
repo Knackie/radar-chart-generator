@@ -23,17 +23,17 @@ def generate_chart():
         float(request.form['slider9'])
     ]
 
-    # Récupérer les titres des critères
+    # Récupérer les titres des critères, avec une valeur par défaut si non fourni
     labels = [
-        request.form['title1'],
-        request.form['title2'],
-        request.form['title3'],
-        request.form['title4'],
-        request.form['title5'],
-        request.form['title6'],
-        request.form['title7'],
-        request.form['title8'],
-        request.form['title9']
+        request.form['title1'] if request.form['title1'] else 'Critère 1',
+        request.form['title2'] if request.form['title2'] else 'Critère 2',
+        request.form['title3'] if request.form['title3'] else 'Critère 3',
+        request.form['title4'] if request.form['title4'] else 'Critère 4',
+        request.form['title5'] if request.form['title5'] else 'Critère 5',
+        request.form['title6'] if request.form['title6'] else 'Critère 6',
+        request.form['title7'] if request.form['title7'] else 'Critère 7',
+        request.form['title8'] if request.form['title8'] else 'Critère 8',
+        request.form['title9'] if request.form['title9'] else 'Critère 9'
     ]
     
     # Création du radar chart avec Plotly
@@ -62,4 +62,4 @@ def generate_chart():
     return render_template('index.html', image_path=img_path, values=values)
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run()
