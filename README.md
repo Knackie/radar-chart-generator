@@ -24,7 +24,7 @@ This is a simple web application built with Flask that generates radar charts ba
 1. **Clone the repo:**
 
    ```bash
-   git clone https://github.com/your-username/radar-chart-generator.git
+   git clone https://github.com/knackie/radar-chart-generator.git
    cd radar-chart-generator
    ```
 
