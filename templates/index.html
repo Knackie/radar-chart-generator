@@ -19,10 +19,10 @@
         form {
             margin-bottom: 30px;
         }
-        .slider-label {
+        .slider-label, .title-label {
             margin: 10px 0;
         }
-        .slider {
+        .slider, .title-input {
             width: 100%;
             margin: 10px 0;
         }
@@ -39,7 +39,10 @@
     <form action="/generate_chart" method="POST">
         {% for i in range(1, 10) %}
         <div class="slider-container">
-            <label class="slider-label" for="slider{{i}}">Critère {{i}} :</label>
+            <label class="title-label" for="title{{i}}">Titre du Critère {{i}} :</label>
+            <input type="text" id="title{{i}}" name="title{{i}}" class="title-input" placeholder="Nom du critère {{i}}" required>
+
+            <label class="slider-label" for="slider{{i}}">Valeur pour le Critère {{i}} :</label>
             <input type="range" id="slider{{i}}" name="slider{{i}}" class="slider" min="0" max="10" value="5">
         </div>
         {% endfor %}
