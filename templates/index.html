@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Radar Chart Generator with Categories</title>
+    <title>Radar Chart Generator with Dynamic Criteria</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -19,10 +19,10 @@
         form {
             margin-bottom: 30px;
         }
-        .slider-label, .title-label, .category-label {
+        .slider-label, .title-label, .category-label, .num-label {
             margin: 10px 0;
         }
-        .slider, .title-input, .category-input {
+        .slider, .title-input, .category-input, .num-input {
             width: 100%;
             margin: 10px 0;
         }
@@ -31,45 +31,66 @@
             max-width: 100%;
         }
     </style>
+    <script>
+        function generateForm() {
+            var criteriaCount = document.getElementById('criteria_count').value;
+            var criteriaContainer = document.getElementById('criteria-container');
+            var categoriesContainer = document.getElementById('categories-container');
+
+            // Clear existing form fields
+            criteriaContainer.innerHTML = '';
+            categoriesContainer.innerHTML = '';
+
+            // Dynamically create fields for each criterion
+            for (let i = 1; i <= criteriaCount; i++) {
+                criteriaContainer.innerHTML += `
+                    <div class="slider-container">
+                        <label class="title-label" for="title${i}">Title for Criterion ${i} (leave empty for default):</label>
+                        <input type="text" id="title${i}" name="title${i}" class="title-input" placeholder="Criterion ${i}">
+
+                        <label class="slider-label" for="slider${i}">Value for Criterion ${i}:</label>
+                        <input type="range" id="slider${i}" name="slider${i}" class="slider" min="0" max="10" value="5">
+                    </div>`;
+            }
+
+            // Dynamically create fields for categories
+            categoriesContainer.innerHTML += `
+                <h2>Define Categories</h2>
+                <p>You can assign criteria to categories. Leave category names blank if not needed.</p>`;
+
+            for (let i = 1; i <= 10; i++) {  // Allow up to 10 categories
+                categoriesContainer.innerHTML += `
+                    <div class="category-container">
+                        <label class="category-label" for="category${i}">Category ${i} Name (leave empty if not used):</label>
+                        <input type="text" id="category${i}" name="category${i}" class="category-input" placeholder="Category ${i}">
+
+                        <label class="num-label" for="num_criteria${i}">Number of criteria for Category ${i}:</label>
+                        <input type="number" id="num_criteria${i}" name="num_criteria${i}" class="num-input" min="1" max="${criteriaCount}" value="1">
+                    </div>`;
+            }
+        }
+    </script>
 </head>
 <body>
 
 <div class="container">
     <h1>Radar Chart Generator</h1>
-    <form action="/generate_chart" method="POST">
-        <!-- Category A -->
-        <h2>Category A</h2>
-        <label class="category-label" for="categoryA">Category A Name:</label>
-        <input type="text" id="categoryA" name="categoryA" class="category-input" placeholder="Category A Name" required>
-
-        {% for i in range(1, 6) %}
-        <div class="slider-container">
-            <label class="title-label" for="title{{i}}">Title for Criterion {{i}}:</label>
-            <input type="text" id="title{{i}}" name="title{{i}}" class="title-input" placeholder="Criterion {{i}}">
-
-            <label class="slider-label" for="slider{{i}}">Value for Criterion {{i}}:</label>
-            <input type="range" id="slider{{i}}" name="slider{{i}}" class="slider" min="0" max="10" value="5">
-        </div>
-        {% endfor %}
-
-        <!-- Category B -->
-        <h2>Category B</h2>
-        <label class="category-label" for="categoryB">Category B Name:</label>
-        <input type="text" id="categoryB" name="categoryB" class="category-input" placeholder="Category B Name" required>
-
-        {% for i in range(6, 10) %}
-        <div class="slider-container">
-            <label class="title-label" for="title{{i}}">Title for Criterion {{i}}:</label>
-            <input type="text" id="title{{i}}" name="title{{i}}" class="title-input" placeholder="Criterion {{i}}">
-
-            <label class="slider-label" for="slider{{i}}">Value for Criterion {{i}}:</label>
-            <input type="range" id="slider{{i}}" name="slider{{i}}" class="slider" min="0" max="10" value="5">
-        </div>
-        {% endfor %}
+    
+    <!-- Select number of criteria -->
+    <form method="POST" action="/generate_chart">
+        <label for="criteria_count">Number of Criteria:</label>
+        <input type="number" id="criteria_count" name="criteria_count" class="num-input" min="1" value="9" required>
+        <button type="button" onclick="generateForm()">Set Criteria and Categories</button>
+        
+        <!-- Criteria fields will be generated dynamically -->
+        <div id="criteria-container"></div>
+        
+        <!-- Category fields will be generated dynamically -->
+        <div id="categories-container"></div>
 
         <button type="submit">Generate Radar Chart</button>
     </form>
-    
+
     {% if image_path %}
     <h2>Result:</h2>
     <img src="{{ image_path }}" alt="Radar Chart">

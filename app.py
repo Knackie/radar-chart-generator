@@ -10,56 +10,63 @@ def index():
 
 @app.route('/generate_chart', methods=['POST'])
 def generate_chart():
-    # Récupérer les valeurs des sliders
-    values = [
-        float(request.form['slider1']),
-        float(request.form['slider2']),
-        float(request.form['slider3']),
-        float(request.form['slider4']),
-        float(request.form['slider5']),
-        float(request.form['slider6']),
-        float(request.form['slider7']),
-        float(request.form['slider8']),
-        float(request.form['slider9'])
-    ]
+    criteria_count = int(request.form['criteria_count'])
+    categories = []
+    values_by_category = []
+    labels_by_category = []
+    all_values = []
 
-    # Récupérer les titres des critères, avec une valeur par défaut si non fourni
-    labels = [
-        request.form['title1'] if request.form['title1'] else 'Critère 1',
-        request.form['title2'] if request.form['title2'] else 'Critère 2',
-        request.form['title3'] if request.form['title3'] else 'Critère 3',
-        request.form['title4'] if request.form['title4'] else 'Critère 4',
-        request.form['title5'] if request.form['title5'] else 'Critère 5',
-        request.form['title6'] if request.form['title6'] else 'Critère 6',
-        request.form['title7'] if request.form['title7'] else 'Critère 7',
-        request.form['title8'] if request.form['title8'] else 'Critère 8',
-        request.form['title9'] if request.form['title9'] else 'Critère 9'
-    ]
-    
-    # Création du radar chart avec Plotly
-    fig = go.Figure(
-        data=[
-            go.Scatterpolar(
-                r=values,
-                theta=labels,
-                fill='toself',
-                name='Évaluation'
-            )
-        ]
-    )
+    # Iterate through possible categories (up to 10)
+    for i in range(1, 11):
+        category_name = request.form[f'category{i}']
+        num_criteria = int(request.form[f'num_criteria{i}']) if request.form[f'num_criteria{i}'] else 0
 
+        # If a category is defined and has at least 1 criterion
+        if category_name and num_criteria > 0:
+            category_values = []
+            category_labels = []
+
+            # Collect the criteria values and labels for this category
+            for j in range(sum(len(v) for v in values_by_category) + 1, sum(len(v) for v in values_by_category) + num_criteria + 1):
+                if j > criteria_count:  # Ensure we don't exceed the number of criteria
+                    break
+                value = float(request.form[f'slider{j}'])
+                label = request.form[f'title{j}'] if request.form[f'title{j}'] else f'Criterion {j}'
+
+                category_values.append(value)
+                category_labels.append(label)
+                all_values.append(value)
+            
+            # Store the values and labels for this category
+            categories.append(category_name)
+            values_by_category.append(category_values)
+            labels_by_category.append(category_labels)
+
+    # Create radar chart with Plotly
+    fig = go.Figure()
+
+    # Add data for each category to the radar chart
+    for idx, category in enumerate(categories):
+        fig.add_trace(go.Scatterpolar(
+            r=values_by_category[idx],
+            theta=labels_by_category[idx],
+            fill='toself',
+            name=category
+        ))
+
+    # Configure the chart layout
     fig.update_layout(
         polar=dict(
             radialaxis=dict(visible=True, range=[0, 10])
         ),
-        showlegend=False
+        showlegend=True
     )
-    
-    # Enregistrer le graphique en tant qu'image
+
+    # Save the chart as an image
     img_path = "static/images/radar_chart.png"
     pio.write_image(fig, img_path)
 
-    return render_template('index.html', image_path=img_path, values=values)
+    return render_template('index.html', image_path=img_path, values=all_values)
 
 if __name__ == '__main__':
-    app.run()
+    app.run(debug=True)
