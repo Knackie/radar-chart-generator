@@ -67,10 +67,11 @@ def generate_chart():
     # Create a list of positions around the circle
     annotations = []
     for i, label in enumerate(all_labels):
+        # Calculate the angle for each criterion
         angle = angle_step * i
-        x = 0.5 + 0.5 * math.cos(math.radians(angle))  # x-position based on angle
-        y = 0.5 + 0.5 * math.sin(math.radians(angle))  # y-position based on angle
-        
+        x = 0.5 + 0.6 * math.cos(math.radians(angle - 90))  # Adjust angle to start at the top
+        y = 0.5 + 0.6 * math.sin(math.radians(angle - 90))  # Adjust angle to start at the top
+
         annotations.append(
             dict(
                 x=x, y=y,  # Position based on angle
@@ -78,7 +79,10 @@ def generate_chart():
                 text=label,
                 showarrow=False,
                 font=dict(size=14),
-                align="center"
+                align="center",
+                bgcolor="rgba(255, 255, 255, 0.8)",  # Light background for better readability
+                bordercolor="black",
+                borderwidth=1
             )
         )
 
