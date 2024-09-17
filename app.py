@@ -51,31 +51,38 @@ def generate_chart():
         name='Critères'
     ))
 
-    # Add category names as annotations around the radar chart
+    # Configure the layout of the chart
     fig.update_layout(
         polar=dict(
             radialaxis=dict(visible=True, range=[0, 10])
         ),
-        showlegend=True,
+        showlegend=False,  # Hide the legend since we are adding custom annotations
+    )
+
+    # Add category names as annotations to simulate a surrounding circle
+    fig.update_layout(
         annotations=[
             dict(
-                x=0.5, y=1.2,  # Adjust positioning
+                x=0.5, y=1.3,  # Adjust positioning at the top of the chart
                 xref="paper", yref="paper",
                 text="Catégorie 1 : Culture",
-                showarrow=False
+                showarrow=False,
+                font=dict(size=14)
             ),
             dict(
-                x=1.2, y=0.5,  # Adjust positioning
+                x=1.3, y=0.5,  # Adjust positioning at the right of the chart
                 xref="paper", yref="paper",
                 text="Catégorie 2 : Projet",
-                showarrow=False
+                showarrow=False,
+                font=dict(size=14)
             ),
             dict(
-                x=0.5, y=-0.2,  # Adjust positioning
+                x=0.5, y=-0.3,  # Adjust positioning at the bottom of the chart
                 xref="paper", yref="paper",
                 text="Catégorie 3 : Équipe",
-                showarrow=False
-            )
+                showarrow=False,
+                font=dict(size=14)
+            ),
         ]
     )
 
