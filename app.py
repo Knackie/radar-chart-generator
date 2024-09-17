@@ -1,6 +1,7 @@
 from flask import Flask, render_template, request
 import plotly.graph_objs as go
 import plotly.io as pio
+import math
 
 app = Flask(__name__)
 
@@ -51,40 +52,38 @@ def generate_chart():
         name='Critères'
     ))
 
-    # Configure the layout of the chart
+    # Configure the layout of the radar chart
     fig.update_layout(
         polar=dict(
             radialaxis=dict(visible=True, range=[0, 10])
         ),
-        showlegend=False,  # Hide the legend since we are adding custom annotations
+        showlegend=False,
     )
 
-    # Add category names as annotations to simulate a surrounding circle
-    fig.update_layout(
-        annotations=[
+    # Divide the outer circle into 9 segments and position the labels
+    n_criteria = 9
+    angle_step = 360 / n_criteria
+
+    # Create a list of positions around the circle
+    annotations = []
+    for i, label in enumerate(all_labels):
+        angle = angle_step * i
+        x = 0.5 + 0.5 * math.cos(math.radians(angle))  # x-position based on angle
+        y = 0.5 + 0.5 * math.sin(math.radians(angle))  # y-position based on angle
+        
+        annotations.append(
             dict(
-                x=0.5, y=1.3,  # Adjust positioning at the top of the chart
+                x=x, y=y,  # Position based on angle
                 xref="paper", yref="paper",
-                text="Catégorie 1 : Culture",
+                text=label,
                 showarrow=False,
-                font=dict(size=14)
-            ),
-            dict(
-                x=1.3, y=0.5,  # Adjust positioning at the right of the chart
-                xref="paper", yref="paper",
-                text="Catégorie 2 : Projet",
-                showarrow=False,
-                font=dict(size=14)
-            ),
-            dict(
-                x=0.5, y=-0.3,  # Adjust positioning at the bottom of the chart
-                xref="paper", yref="paper",
-                text="Catégorie 3 : Équipe",
-                showarrow=False,
-                font=dict(size=14)
-            ),
-        ]
-    )
+                font=dict(size=14),
+                align="center"
+            )
+        )
+
+    # Add the criteria labels as annotations
+    fig.update_layout(annotations=annotations)
 
     # Save the chart as an image
     img_path = "static/images/radar_chart.png"
