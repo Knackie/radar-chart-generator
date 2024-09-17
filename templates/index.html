@@ -23,8 +23,34 @@
             margin: 10px 0;
         }
         .slider {
+            -webkit-appearance: none;
+            appearance: none;
             width: 100%;
-            margin: 10px 0;
+            height: 15px;
+            background: #ddd;
+            outline: none;
+            opacity: 0.9;
+            transition: opacity .15s ease-in-out;
+            border-radius: 5px;
+        }
+        .slider:hover {
+            opacity: 1;
+        }
+        .slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 25px;
+            height: 25px;
+            background: #4CAF50;
+            cursor: pointer;
+            border-radius: 50%;
+        }
+        .slider::-moz-range-thumb {
+            width: 25px;
+            height: 25px;
+            background: #4CAF50;
+            cursor: pointer;
+            border-radius: 50%;
         }
         img {
             margin-top: 20px;
