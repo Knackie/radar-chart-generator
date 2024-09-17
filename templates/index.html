@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="fr">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Radar Chart Generator</title>
+    <title>Radar Chart Generator with Categories</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -19,10 +19,10 @@
         form {
             margin-bottom: 30px;
         }
-        .slider-label, .title-label {
+        .slider-label, .title-label, .category-label {
             margin: 10px 0;
         }
-        .slider, .title-input {
+        .slider, .title-input, .category-input {
             width: 100%;
             margin: 10px 0;
         }
@@ -37,22 +37,43 @@
 <div class="container">
     <h1>Radar Chart Generator</h1>
     <form action="/generate_chart" method="POST">
-        {% for i in range(1, 10) %}
-        <div class="slider-container">
-            <label class="title-label" for="title{{i}}">Titre du Critère {{i}} :</label>
-            <input type="text" id="title{{i}}" name="title{{i}}" class="title-input" placeholder="Nom du critère {{i}}">
+        <!-- Category A -->
+        <h2>Category A</h2>
+        <label class="category-label" for="categoryA">Category A Name:</label>
+        <input type="text" id="categoryA" name="categoryA" class="category-input" placeholder="Category A Name" required>
 
-            <label class="slider-label" for="slider{{i}}">Valeur pour le Critère {{i}} :</label>
+        {% for i in range(1, 6) %}
+        <div class="slider-container">
+            <label class="title-label" for="title{{i}}">Title for Criterion {{i}}:</label>
+            <input type="text" id="title{{i}}" name="title{{i}}" class="title-input" placeholder="Criterion {{i}}">
+
+            <label class="slider-label" for="slider{{i}}">Value for Criterion {{i}}:</label>
             <input type="range" id="slider{{i}}" name="slider{{i}}" class="slider" min="0" max="10" value="5">
         </div>
         {% endfor %}
-        <button type="submit">Générer le Radar Chart</button>
+
+        <!-- Category B -->
+        <h2>Category B</h2>
+        <label class="category-label" for="categoryB">Category B Name:</label>
+        <input type="text" id="categoryB" name="categoryB" class="category-input" placeholder="Category B Name" required>
+
+        {% for i in range(6, 10) %}
+        <div class="slider-container">
+            <label class="title-label" for="title{{i}}">Title for Criterion {{i}}:</label>
+            <input type="text" id="title{{i}}" name="title{{i}}" class="title-input" placeholder="Criterion {{i}}">
+
+            <label class="slider-label" for="slider{{i}}">Value for Criterion {{i}}:</label>
+            <input type="range" id="slider{{i}}" name="slider{{i}}" class="slider" min="0" max="10" value="5">
+        </div>
+        {% endfor %}
+
+        <button type="submit">Generate Radar Chart</button>
     </form>
     
     {% if image_path %}
-    <h2>Résultat :</h2>
+    <h2>Result:</h2>
     <img src="{{ image_path }}" alt="Radar Chart">
-    <p>Valeurs utilisées : {{ values }}</p>
+    <p>Used values: {{ values }}</p>
     {% endif %}
 </div>
 
