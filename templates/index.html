@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="fr">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Radar Chart Generator with Dynamic Criteria</title>
+    <title>Générateur de Radar Chart - Catégories Fixes</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -19,10 +19,10 @@
         form {
             margin-bottom: 30px;
         }
-        .slider-label, .title-label, .category-label, .num-label {
+        .slider-label {
             margin: 10px 0;
         }
-        .slider, .title-input, .category-input, .num-input {
+        .slider {
             width: 100%;
             margin: 10px 0;
         }
@@ -31,70 +31,65 @@
             max-width: 100%;
         }
     </style>
-    <script>
-        function generateForm() {
-            var criteriaCount = document.getElementById('criteria_count').value;
-            var criteriaContainer = document.getElementById('criteria-container');
-            var categoriesContainer = document.getElementById('categories-container');
-
-            // Clear existing form fields
-            criteriaContainer.innerHTML = '';
-            categoriesContainer.innerHTML = '';
-
-            // Dynamically create fields for each criterion
-            for (let i = 1; i <= criteriaCount; i++) {
-                criteriaContainer.innerHTML += `
-                    <div class="slider-container">
-                        <label class="title-label" for="title${i}">Title for Criterion ${i} (leave empty for default):</label>
-                        <input type="text" id="title${i}" name="title${i}" class="title-input" placeholder="Criterion ${i}">
-
-                        <label class="slider-label" for="slider${i}">Value for Criterion ${i}:</label>
-                        <input type="range" id="slider${i}" name="slider${i}" class="slider" min="0" max="10" value="5">
-                    </div>`;
-            }
-
-            // Dynamically create fields for categories
-            categoriesContainer.innerHTML += `
-                <h2>Define Categories</h2>
-                <p>You can assign criteria to categories. Leave category names blank if not needed.</p>`;
-
-            for (let i = 1; i <= 10; i++) {  // Allow up to 10 categories
-                categoriesContainer.innerHTML += `
-                    <div class="category-container">
-                        <label class="category-label" for="category${i}">Category ${i} Name (leave empty if not used):</label>
-                        <input type="text" id="category${i}" name="category${i}" class="category-input" placeholder="Category ${i}">
-
-                        <label class="num-label" for="num_criteria${i}">Number of criteria for Category ${i}:</label>
-                        <input type="number" id="num_criteria${i}" name="num_criteria${i}" class="num-input" min="1" max="${criteriaCount}" value="1">
-                    </div>`;
-            }
-        }
-    </script>
 </head>
 <body>
 
 <div class="container">
-    <h1>Radar Chart Generator</h1>
+    <h1>Générateur de Radar Chart</h1>
     
-    <!-- Select number of criteria -->
     <form method="POST" action="/generate_chart">
-        <label for="criteria_count">Number of Criteria:</label>
-        <input type="number" id="criteria_count" name="criteria_count" class="num-input" min="1" value="9" required>
-        <button type="button" onclick="generateForm()">Set Criteria and Categories</button>
-        
-        <!-- Criteria fields will be generated dynamically -->
-        <div id="criteria-container"></div>
-        
-        <!-- Category fields will be generated dynamically -->
-        <div id="categories-container"></div>
+        <!-- Catégorie 1 : Culture -->
+        <h2>Catégorie 1 : Culture</h2>
+        <div>
+            <label class="slider-label" for="adhesion">Adhésion :</label>
+            <input type="range" id="adhesion" name="adhesion" class="slider" min="0" max="10" value="5">
+        </div>
+        <div>
+            <label class="slider-label" for="confiance">Confiance :</label>
+            <input type="range" id="confiance" name="confiance" class="slider" min="0" max="10" value="5">
+        </div>
+        <div>
+            <label class="slider-label" for="prise_decision">Prise de décision :</label>
+            <input type="range" id="prise_decision" name="prise_decision" class="slider" min="0" max="10" value="5">
+        </div>
 
-        <button type="submit">Generate Radar Chart</button>
+        <!-- Catégorie 2 : Projet -->
+        <h2>Catégorie 2 : Projet</h2>
+        <div>
+            <label class="slider-label" for="changement">Changement :</label>
+            <input type="range" id="changement" name="changement" class="slider" min="0" max="10" value="5">
+        </div>
+        <div>
+            <label class="slider-label" for="criticite">Criticité :</label>
+            <input type="range" id="criticite" name="criticite" class="slider" min="0" max="10" value="5">
+        </div>
+        <div>
+            <label class="slider-label" for="livraison">Livraison :</label>
+            <input type="range" id="livraison" name="livraison" class="slider" min="0" max="10" value="5">
+        </div>
+
+        <!-- Catégorie 3 : Équipe -->
+        <h2>Catégorie 3 : Équipe</h2>
+        <div>
+            <label class="slider-label" for="taille_equipe">Taille de l'équipe :</label>
+            <input type="range" id="taille_equipe" name="taille_equipe" class="slider" min="0" max="10" value="5">
+        </div>
+        <div>
+            <label class="slider-label" for="experience">Expérience :</label>
+            <input type="range" id="experience" name="experience" class="slider" min="0" max="10" value="5">
+        </div>
+        <div>
+            <label class="slider-label" for="acces">Accès :</label>
+            <input type="range" id="acces" name="acces" class="slider" min="0" max="10" value="5">
+        </div>
+
+        <button type="submit">Générer le Radar Chart</button>
     </form>
 
     {% if image_path %}
-    <h2>Result:</h2>
+    <h2>Résultat :</h2>
     <img src="{{ image_path }}" alt="Radar Chart">
-    <p>Used values: {{ values }}</p>
+    <p>Valeurs utilisées : {{ values }}</p>
     {% endif %}
 </div>
 
