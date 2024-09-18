@@ -65,9 +65,9 @@ def generate_chart():
         color = colors_by_category[idx]
         # Colorer les sections des critères (cercle 11)
         for i in range(start, end):
-            ax.fill_between(np.linspace(angles[i], angles[i+1], 100), 10, 11, color=color, alpha=0.4)  # Cercle 11 (critères)
+            ax.fill_between(np.linspace(angles[i], angles[i+1], 100), 10, 11, color=color, alpha=0.4)
         # Colorer les sections des catégories (cercle 12)
-        ax.fill_between(np.linspace(angles[start], angles[end], 100), 11, 12, color=color, alpha=0.4)  # Cercle 12 (catégories)
+        ax.fill_between(np.linspace(angles[start], angles[end], 100), 11, 12, color=color, alpha=0.4)
 
     # Configuration des axes (échelle de 0 à 10)
     ax.set_ylim(0, 12)  # Ajustement pour inclure les cercles externes
