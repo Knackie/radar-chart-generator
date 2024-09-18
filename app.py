@@ -63,7 +63,8 @@ def generate_chart():
     criteria_radius = 1.3  # Premier cercle externe pour les critères
     category_radius = 1.6  # Second cercle externe pour les catégories
 
-    # Ajouter les labels des critères dans le cercle externe des critères
+    # --- Ajouter les labels des critères dans le cercle externe des critères ---
+    # Chaque étiquette sera placée sur le premier cercle externe (criteria_radius)
     for i, angle in enumerate(angles[:-1]):
         x = criteria_radius * cos(angle)
         y = criteria_radius * sin(angle)
@@ -71,7 +72,8 @@ def generate_chart():
         # Placer les critères autour du premier cercle externe
         ax.text(x, y, categories[i], horizontalalignment='center', verticalalignment='center', size=12)
 
-    # Ajouter les labels des catégories dans le cercle externe des catégories
+    # --- Ajouter les labels des catégories dans le cercle externe des catégories ---
+    # Chaque étiquette de catégorie sera placée sur le deuxième cercle externe (category_radius)
     for i in range(len(category_labels)):
         start_idx = category_boundaries[i]
         end_idx = category_boundaries[i + 1] if i + 1 < len(category_boundaries) else len(categories)
