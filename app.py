@@ -1,122 +1,100 @@
-from flask import Flask, render_template, request, send_file
 import matplotlib.pyplot as plt
 import numpy as np
-from math import pi
 import io
+from flask import Flask, render_template, request, send_file
+import matplotlib.colors as mcolors
 
 app = Flask(__name__)
 
-# Route principale pour afficher le formulaire
+# Helper function to create radar chart
+def radar_chart(values, categories, criteria, angles, category_bounds):
+    fig, ax = plt.subplots(figsize=(6, 6), subplot_kw=dict(polar=True))
+
+    # Set the background color for the entire plot
+    ax.set_facecolor('white')
+
+    # Draw one axe per variable and add labels
+    ax.plot(angles, values, linewidth=2, linestyle='solid')
+    ax.fill(angles, values, color='blue', alpha=0.25)
+
+    # Draw the colored zones
+    ax.fill_between(angles, 0, 4, color='lightgray', alpha=0.4)
+    ax.fill_between(angles, 4, 8, color='darkgray', alpha=0.4)
+    ax.fill_between(angles, 8, 10, color='lightgray', alpha=0.4)
+
+    # Zone 11-12 for criteria
+    for i, angle in enumerate(angles[:-1]):
+        ax.plot([angle, angle], [10, 11], color='black', linewidth=2)
+
+    # Zone 12 for categories
+    for start, end in category_bounds:
+        mid_angle = np.mean(angles[start:end])
+        ax.plot([mid_angle, mid_angle], [11, 12], color='black', linewidth=2)
+
+    # Draw circle 12 for outermost categories
+    ax.set_ylim(0, 12)
+
+    # Hide the frame
+    ax.spines['polar'].set_visible(False)
+
+    # Hide grid lines
+    ax.grid(False)
+
+    # Remove labels
+    ax.set_xticks([])
+    ax.set_yticks([])
+
+    # --- Add the values of the criteria in zone 11 ---
+    for i, angle in enumerate(angles[:-1]):
+        rotation_angle = np.degrees(angle) - 90  # Incline towards the center
+        ha = 'center'
+
+        # Adjust rotation for bottom texts
+        if rotation_angle < -90 or rotation_angle > 90:
+            rotation_angle += 180
+
+        ax.text(angle, 10.5, criteria[i], rotation=rotation_angle, ha=ha, va='center', size=10, weight='bold')
+
+    # --- Add the category names in zone 12 ---
+    for i, (start, end) in enumerate(category_bounds):
+        mid_angle = np.mean(angles[start:end])
+        rotation_angle = np.degrees(mid_angle) - 90
+
+        ha = 'center'
+        if rotation_angle < -90 or rotation_angle > 90:
+            rotation_angle += 180
+
+        ax.text(mid_angle, 11.5, categories[i], rotation=rotation_angle, ha=ha, va='center', size=12, weight='bold')
+
+    return fig, ax
+
 @app.route('/')
 def index():
     return render_template('index.html')
 
-# Route pour générer le radar chart
 @app.route('/generate_chart', methods=['POST'])
 def generate_chart():
-    # Récupérer les valeurs des critères via le formulaire
-    adhesion = float(request.form['adhesion'])
-    confiance = float(request.form['confiance'])
-    prise_decision = float(request.form['prise_decision'])
+    # Get values from the form
+    values = list(map(float, request.form.getlist('values[]')))
+    criteria = request.form.getlist('criteria[]')
+    categories = request.form.getlist('categories[]')
 
-    changement = float(request.form['changement'])
-    criticite = float(request.form['criticite'])
-    livraison = float(request.form['livraison'])
-
-    taille_equipe = float(request.form['taille_equipe'])
-    experience = float(request.form['experience'])
-    acces = float(request.form['acces'])
-
-    # Les catégories et leurs critères
-    categories = ['Culture', 'Projet', 'Équipe']  # Noms des catégories
-    category_bounds = [(0, 3), (3, 6), (6, 9)]  # Index des critères par catégorie
-    criteria = [
-        'Adhésion', 'Confiance', 'Prise de décision',  # Culture
-        'Changement', 'Criticité', 'Livraison',  # Projet
-        'Taille de l\'équipe', 'Expérience', 'Accès'  # Équipe
-    ]
-    
-    # Valeurs saisies pour les critères
-    values = [adhesion, confiance, prise_decision, changement, criticite, livraison, taille_equipe, experience, acces]
-    values += values[:1]  # Boucler pour fermer le radar chart
-
-    # Calcul des angles pour chaque critère
-    n_criteria = len(criteria)
-    angles = [n / float(n_criteria) * 2 * pi for n in range(n_criteria)]
+    # Number of criteria and angles
+    num_vars = len(criteria)
+    angles = np.linspace(0, 2 * np.pi, num_vars, endpoint=False).tolist()
+    values += values[:1]
     angles += angles[:1]
 
-    # Définir des couleurs par catégorie
-    colors_by_category = ['#99FF99', '#FF9999', '#99CCFF']  # Vert, rouge, bleu pour "Équipe", "Projet", "Culture"
+    # Define the bounds for each category (start and end index for criteria)
+    category_bounds = [(0, 3), (3, 6), (6, 9)]
 
-    # Création du radar chart
-    fig, ax = plt.subplots(figsize=(8, 8), subplot_kw=dict(polar=True))
+    # Generate radar chart
+    fig, ax = radar_chart(values, categories, criteria, angles, category_bounds)
 
-    # Couleurs dégradées pour les zones (Agile, Hybride, Prédictive)
-    ax.fill_between(np.linspace(0, 2 * pi, 100), 0, 4, color='dimgray', alpha=0.6)  # Agile en gris foncé
-    ax.fill_between(np.linspace(0, 2 * pi, 100), 4, 8, color='silver', alpha=0.4)  # Hybride en gris moyen
-    ax.fill_between(np.linspace(0, 2 * pi, 100), 8, 10, color='white', alpha=0.4)  # Prédictive en blanc
-
-    # Dessiner le radar chart avec les valeurs
-    ax.fill(angles, values, color='b', alpha=0.25)
-    ax.plot(angles, values, color='b', linewidth=2)
-
-    # --- Colorier les zones 11 et 12 pour chaque catégorie avec décalage de 60° à gauche et à droite ---
-    for idx, (start, end) in enumerate(category_bounds):
-        color = colors_by_category[idx]
-
-        # Calculer les angles décalés pour chaque catégorie
-        angle_central = np.mean(angles[start:end])
-        angle_debut = angle_central - np.radians(60)
-        angle_fin = angle_central + np.radians(60)
-
-        # Colorier le cercle 11 et 12 pour chaque catégorie avec un décalage de 60° dans les deux directions
-        ax.fill_between(np.linspace(angle_debut, angle_fin, 100), 10, 11, color=color, alpha=0.4)  # Cercle 11
-        ax.fill_between(np.linspace(angle_debut, angle_fin, 100), 11, 12, color=color, alpha=0.4)  # Cercle 12
-
-    # Configuration des axes (échelle de 0 à 10)
-    ax.set_ylim(0, 12)  # Ajustement pour inclure les cercles externes
-    ax.set_yticks(range(1, 11))  # Afficher les cercles de 1 à 10 uniquement pour les valeurs
-    ax.set_yticklabels([str(i) for i in range(1, 11)])  # Afficher les labels des cercles
-    ax.set_xticks([])  # Retirer les labels du diagramme
-
-    # --- Déplacer les traits des critères (cercle 11) avec un décalage de 20° ---
-    for i, angle in enumerate(angles[:-1]):
-        adjusted_angle = angle + np.radians(20)  # Décalage de 20°
-        ax.plot([adjusted_angle, adjusted_angle], [10, 11], color='black', linewidth=2)  # Lignes entre 10 et 11
-
-    # --- Déplacer les traits des catégories (cercle 12) avec un décalage de 60° ---
-    for start, end in category_bounds:
-        mid_angle = np.mean(angles[start:end]) + np.radians(60)  # Décalage de 60°
-        ax.plot([mid_angle, mid_angle], [11, 12], color='black', linewidth=2)  # Lignes entre 11 et 12
-
-    # --- Ajouter les valeurs des critères dans la zone 11 ---
-    for i, angle in enumerate(angles[:-1]):
-        rotation_angle = np.degrees(angle) + 90  # Tourner chaque critère de 90°
-        ha = 'center'  # Centrer horizontalement
-
-        # Ajuster la rotation pour les critères
-        if 90 < rotation_angle < 270:  # Ajuster pour les textes au bas du cercle
-            rotation_angle += 180
-
-        # Ajouter le texte du critère dans un cercle inférieur
-        ax.text(angle, 10.5, criteria[i], rotation=rotation_angle, ha=ha, va='center', size=10, weight='bold')  # Déplacé à 10.5 pour descendre les légendes
-
-    # --- Ajouter les catégories dans la zone 12 ---
-    for i, (start, end) in enumerate(category_bounds):
-        mid_angle = np.mean(angles[start:end])
-        rotation_angle = np.degrees(mid_angle) + 90  # Ajouter 90° de rotation pour chaque catégorie
-
-        ha = 'center'  # Centrer horizontalement
-        if 90 < rotation_angle < 270:  # Ajuster pour les textes au bas du cercle
-            rotation_angle += 180
-        ax.text(mid_angle, 11.5, categories[i], rotation=rotation_angle, ha=ha, va='center', size=12, weight='bold')  # Déplacé à 11.5 pour descendre les légendes
-
-    # Sauvegarde de l'image dans un buffer
+    # Save chart to a BytesIO object and send as response
     img = io.BytesIO()
-    plt.savefig(img, format='png')
+    plt.savefig(img, format='png', bbox_inches='tight')
     img.seek(0)
-
-    # Fermer la figure pour libérer la mémoire
     plt.close(fig)
 
     return send_file(img, mimetype='image/png')
