@@ -60,14 +60,16 @@ def generate_chart():
     ax.set_xticks([])  # Masquer les labels dans le diagramme
 
     # --- Ajustement des rayons des cercles externes ---
-    criteria_radius = 1.2  # Premier cercle externe pour les critères
-    category_radius = 1.4  # Second cercle externe pour les catégories
+    criteria_radius = 1.5  # Premier cercle externe pour les critères
+    category_radius = 1.8  # Second cercle externe pour les catégories
 
     # --- Ajouter les labels des critères dans le cercle externe des critères ---
     for i, angle in enumerate(angles[:-1]):
+        x = criteria_radius * np.cos(angle)
+        y = criteria_radius * np.sin(angle)
+
         # Utiliser ax.text pour placer les critères autour du cercle
-        ha = 'left' if np.degrees(angle) < 180 else 'right'
-        ax.text(angle, criteria_radius, categories[i], horizontalalignment=ha, verticalalignment='center', size=12, rotation=np.degrees(angle))
+        ax.text(angle, criteria_radius, categories[i], horizontalalignment='center', verticalalignment='center', size=12)
 
     # --- Ajouter les labels des catégories dans le cercle externe des catégories ---
     for i in range(len(category_labels)):
