@@ -34,10 +34,6 @@ def generate_chart():
         'Taille de l\'équipe', 'Expérience', 'Accès'  # Équipe
     ]
     
-    # Catégories pour le cercle externe
-    category_labels = ['Culture', 'Projet', 'Équipe']
-    category_boundaries = [0, 3, 6, 9]  # Limites des catégories
-
     n_categories = len(categories)
 
     # Valeurs saisies pour les critères
@@ -51,9 +47,11 @@ def generate_chart():
     # Création du radar chart
     fig, ax = plt.subplots(figsize=(8, 8), subplot_kw=dict(polar=True))
 
-    # Couleurs dégradées pour les cercles de fond (du gris au blanc)
-    for i in range(1, 11):
-        ax.fill_between(np.linspace(0, 2 * pi, 100), i-1, i, color=plt.cm.Greys(1 - i * 0.1), alpha=0.2)
+    # Couleurs dégradées pour les zones
+    # Zone Agile (0-4) en dégradé de gris foncé à gris clair
+    ax.fill_between(np.linspace(0, 2 * pi, 100), 0, 4, color='darkgray', alpha=0.4)
+    ax.fill_between(np.linspace(0, 2 * pi, 100), 4, 8, color='silver', alpha=0.4)  # Hybride en gris plus clair
+    ax.fill_between(np.linspace(0, 2 * pi, 100), 8, 10, color='lightgray', alpha=0.4)  # Prédictive en gris très clair
 
     # Dessiner le radar chart avec les valeurs
     ax.fill(angles, values, color='b', alpha=0.25)
@@ -65,12 +63,7 @@ def generate_chart():
     ax.set_yticklabels([str(i) for i in range(1, 11)])  # Afficher les labels des cercles
     ax.set_xticks([])  # Retirer les labels du diagramme
 
-    # Couleurs douces pour les segments Agile (0-4), Hybride (4-8), Prédictive (8-10)
-    ax.fill_between(np.linspace(0, 2 * pi, 100), 0, 4, color='lightgreen', alpha=0.4)  # Agile
-    ax.fill_between(np.linspace(0, 2 * pi, 100), 4, 8, color='lightyellow', alpha=0.4)  # Hybride
-    ax.fill_between(np.linspace(0, 2 * pi, 100), 8, 10, color='lightcoral', alpha=0.4)  # Prédictive
-
-    # Ajuster les positions des titres "Agile", "Hybride", "Prédictive" au bord du cercle
+    # Ajouter les titres "Agile", "Hybride", "Prédictive" au bord du cercle
     ax.text(np.radians(45), 4.2, 'Agile', horizontalalignment='center', verticalalignment='center', size=14)
     ax.text(np.radians(45), 8.2, 'Hybride', horizontalalignment='center', verticalalignment='center', size=14)
     ax.text(np.radians(45), 10.2, 'Prédictive', horizontalalignment='center', verticalalignment='center', size=14)
