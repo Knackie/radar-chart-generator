@@ -68,4 +68,32 @@ def generate_chart():
 
         # Placement des labels dans le cercle externe
         rotation = np.degrees(angle) if np.degrees(angle) < 180 else np.degrees(angle) + 180
-        ha = 'left' if np.degrees(angle) < 180 else
+        ha = 'left' if np.degrees(angle) < 180 else 'right'
+
+        ax.text(x, y, categories[i], horizontalalignment=ha, size=12, verticalalignment='center', 
+                rotation=rotation, rotation_mode='anchor')
+
+    # Dessiner le cercle externe segmenté pour les catégories
+    for i in range(len(category_labels)):
+        start_idx = category_boundaries[i]
+        end_idx = category_boundaries[i + 1] if i + 1 < len(category_boundaries) else len(categories)
+
+        mid_angle = np.mean([angles[start_idx], angles[end_idx - 1]])
+        x = (circle_radius + 0.2) * np.cos(mid_angle)
+        y = (circle_radius + 0.2) * np.sin(mid_angle)
+
+        ax.text(x, y, category_labels[i], horizontalalignment='center', size=14, verticalalignment='center', 
+                bbox=dict(facecolor='white', edgecolor='black', boxstyle='round,pad=0.3'))
+
+    # Sauvegarde de l'image dans un buffer
+    img = io.BytesIO()
+    plt.savefig(img, format='png')
+    img.seek(0)
+
+    # Fermer la figure pour libérer la mémoire
+    plt.close(fig)
+
+    return send_file(img, mimetype='image/png')
+
+if __name__ == '__main__':
+    app.run(debug=True)
