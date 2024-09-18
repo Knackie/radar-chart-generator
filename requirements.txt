@@ -1,4 +1,4 @@
 Flask
-plotly
-gunicorn
+matplotlib
+numpy
 kaleido
