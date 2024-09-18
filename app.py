@@ -60,6 +60,7 @@ def generate_chart():
     ax.fill(angles, values, color='b', alpha=0.25)
     ax.plot(angles, values, color='b', linewidth=2)
 
+    # Correction pour assurer une répartition correcte des segments de cercle
     # Coloration des sections des cercles 11 et 12 en fonction des catégories
     for idx, (start, end) in enumerate(category_bounds):
         color = colors_by_category[idx]
