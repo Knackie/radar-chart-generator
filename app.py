@@ -46,7 +46,7 @@ def generate_chart():
     angles += angles[:1]
 
     # Définir des couleurs par catégorie
-    colors_by_category = ['#FF9999', '#99CCFF', '#99FF99']  # Rouge, bleu, vert
+    colors_by_category = ['#99FF99', '#FF9999', '#99CCFF']  # Vert, rouge, bleu pour "Équipe", "Projet", "Culture"
 
     # Création du radar chart
     fig, ax = plt.subplots(figsize=(8, 8), subplot_kw=dict(polar=True))
