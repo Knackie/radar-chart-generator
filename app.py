@@ -80,14 +80,18 @@ def generate_chart():
         mid_angle = np.mean(angles[start:end])
         ax.plot([mid_angle + offset_60_degrees, mid_angle + offset_60_degrees], [11, 12], color='black', linewidth=2)  # Lignes entre 11 et 12
 
-    # --- Ajouter les valeurs des critères dans la zone 11 (sans décalage) ---
+    # --- Ajouter les valeurs des critères dans la zone 11 (texte incliné) ---
     for i, angle in enumerate(angles[:-1]):
-        ax.text(angle, 11, criteria[i], horizontalalignment='center', verticalalignment='center', size=10, weight='bold')
+        rotation_angle = np.degrees(angle)  # Convertir en degrés pour l'inclinaison
+        ha = 'right' if np.degrees(angle) > 180 else 'left'  # Ajuster l'alignement
+        ax.text(angle, 11, criteria[i], rotation=rotation_angle-90, ha=ha, va='center', size=10, weight='bold')
 
-    # --- Ajouter les catégories dans la zone 12 (sans décalage) ---
+    # --- Ajouter les catégories dans la zone 12 (texte incliné) ---
     for i, (start, end) in enumerate(category_bounds):
         mid_angle = np.mean(angles[start:end])
-        ax.text(mid_angle, 12, categories[i], horizontalalignment='center', verticalalignment='center', size=12, weight='bold')
+        rotation_angle = np.degrees(mid_angle)  # Convertir en degrés pour l'inclinaison
+        ha = 'right' if np.degrees(mid_angle) > 180 else 'left'  # Ajuster l'alignement
+        ax.text(mid_angle, 12, categories[i], rotation=rotation_angle-90, ha=ha, va='center', size=12, weight='bold')
 
     # Sauvegarde de l'image dans un buffer
     img = io.BytesIO()
