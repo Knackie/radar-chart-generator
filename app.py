@@ -81,7 +81,7 @@ def generate_chart():
 
     # --- Déplacer les traits des critères (cercle 11) avec un écart de 20° ---
     for i, angle in enumerate(angles[:-1]):
-        ax.plot([angle + np.radians(20)], [10, 11], color='black', linewidth=2)  # Lignes entre 10 et 11 avec un décalage de 20°
+        ax.plot([angle, angle], [10, 11], color='black', linewidth=2)  # Lignes entre 10 et 11
 
     # --- Déplacer les traits des catégories (cercle 12) ---
     for start, end in category_bounds:
@@ -107,7 +107,7 @@ def generate_chart():
         ha = 'center'  # Centrer horizontalement
         if 90 < rotation_angle < 270:  # Ajuster pour les textes au bas du cercle
             rotation_angle += 180
-        ax.text(mid_angle + np.radians(40), 12, categories[i], rotation=rotation_angle, ha=ha, va='center', size=12, weight='bold')
+        ax.text(mid_angle, 12, categories[i], rotation=rotation_angle, ha=ha, va='center', size=12, weight='bold')
 
     # Sauvegarde de l'image dans un buffer
     img = io.BytesIO()
