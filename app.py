@@ -84,14 +84,16 @@ def generate_chart():
     for i, angle in enumerate(angles[:-1]):
         rotation_angle = np.degrees(angle)  # Convertir en degrés pour l'inclinaison
         ha = 'right' if np.degrees(angle) > 180 else 'left'  # Ajuster l'alignement
-        ax.text(angle, 11, criteria[i], rotation=rotation_angle-90, ha=ha, va='center', size=10, weight='bold')
+        va = 'top' if 90 < np.degrees(angle) < 270 else 'bottom'  # Ajuster la position verticale selon l'angle
+        ax.text(angle, 11, criteria[i], rotation=rotation_angle-90, ha=ha, va=va, size=10, weight='bold')
 
     # --- Ajouter les catégories dans la zone 12 (texte incliné) ---
     for i, (start, end) in enumerate(category_bounds):
         mid_angle = np.mean(angles[start:end])
         rotation_angle = np.degrees(mid_angle)  # Convertir en degrés pour l'inclinaison
         ha = 'right' if np.degrees(mid_angle) > 180 else 'left'  # Ajuster l'alignement
-        ax.text(mid_angle, 12, categories[i], rotation=rotation_angle-90, ha=ha, va='center', size=12, weight='bold')
+        va = 'top' if 90 < np.degrees(mid_angle) < 270 else 'bottom'  # Ajuster la position verticale selon l'angle
+        ax.text(mid_angle, 12, categories[i], rotation=rotation_angle-90, ha=ha, va=va, size=12, weight='bold')
 
     # Sauvegarde de l'image dans un buffer
     img = io.BytesIO()
