@@ -88,6 +88,10 @@ def generate_chart():
     # Define the bounds for each category (start and end index for criteria)
     category_bounds = [(0, 3), (3, 6), (6, 9)]
 
+    # Vérification de la longueur de la liste 'categories'
+    if len(categories) != len(category_bounds):
+        return "Error: The number of categories does not match the expected number."
+
     # Generate radar chart
     fig, ax = radar_chart(values, categories, criteria, angles, category_bounds)
 
@@ -98,6 +102,7 @@ def generate_chart():
     plt.close(fig)
 
     return send_file(img, mimetype='image/png')
+
 
 if __name__ == '__main__':
     app.run(debug=True)
