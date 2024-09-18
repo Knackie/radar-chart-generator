@@ -95,12 +95,8 @@ def generate_chart():
         ha = 'center'  # Centrer horizontalement
 
         # Ajuster la rotation pour les critères
-        if 90 < rotation_angle < 270:  # Ajuster pour les textes en bas du cercle
+        if 90 < rotation_angle < 270:  # Ajuster pour les textes au bas du cercle
             rotation_angle += 180
-            ha = 'center'
-
-        # Appliquer la rotation inversée pour donner l'effet "remontant"
-        rotation_angle = -rotation_angle
 
         # Ajouter le texte du critère dans un cercle inférieur
         ax.text(angle, 10.5, criteria[i], rotation=rotation_angle, ha=ha, va='center', size=10, weight='bold')  # Déplacé à 10.5 pour descendre les légendes
@@ -111,13 +107,8 @@ def generate_chart():
         rotation_angle = np.degrees(mid_angle) - 90  # Ajouter -90° de rotation pour chaque catégorie
 
         ha = 'center'  # Centrer horizontalement
-        if 90 < rotation_angle < 270:  # Ajuster pour les textes en bas du cercle
+        if 90 < rotation_angle < 270:  # Ajuster pour les textes au bas du cercle
             rotation_angle += 180
-            ha = 'center'
-        
-        # Appliquer la rotation inversée pour donner l'effet "remontant"
-        rotation_angle = -rotation_angle
-
         ax.text(mid_angle, 11.5, categories[i], rotation=rotation_angle, ha=ha, va='center', size=12, weight='bold')  # Déplacé à 11.5 pour descendre les légendes
 
     # Sauvegarde de l'image dans un buffer
