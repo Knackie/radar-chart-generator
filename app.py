@@ -59,16 +59,19 @@ def generate_chart():
     ax.set_yticklabels([])  # Masquer les étiquettes radiales
     ax.set_xticks([])  # Masquer les labels dans le diagramme
 
-    # --- Rayon ajusté pour placer les étiquettes des critères et des catégories ---
-    criteria_radius = 1.5
-    category_radius = 2.0
+    # Ajustement du rayon des cercles externes
+    criteria_radius = 2.0  # Premier cercle externe pour les critères
+    category_radius = 2.5  # Second cercle externe pour les catégories
 
-    # --- Ajouter les labels des critères dans le cercle externe des critères ---
+    # Ajouter les labels des critères dans le cercle externe des critères
     for i, angle in enumerate(angles[:-1]):
-        # Utiliser des coordonnées polaires directement
-        ax.text(angle, criteria_radius, categories[i], horizontalalignment='center', verticalalignment='center', size=12)
+        x = criteria_radius * np.cos(angle)
+        y = criteria_radius * np.sin(angle)
 
-    # --- Ajouter les labels des catégories dans le cercle externe des catégories ---
+        # Utiliser ax.text pour placer les critères autour du cercle externe
+        ax.text(x, y, categories[i], horizontalalignment='center', verticalalignment='center', size=12, transform=ax.transData)
+
+    # Ajouter les labels des catégories dans le cercle externe des catégories
     for i in range(len(category_labels)):
         start_idx = category_boundaries[i]
         end_idx = category_boundaries[i + 1] if i + 1 < len(category_boundaries) else len(categories)
@@ -76,9 +79,13 @@ def generate_chart():
         # Calcul de l'angle moyen pour positionner les labels des catégories
         mid_angle = np.mean([angles[start_idx], angles[end_idx - 1]])
 
-        # Utiliser des coordonnées polaires pour placer les catégories
-        ax.text(mid_angle, category_radius, category_labels[i], horizontalalignment='center', verticalalignment='center', size=14, 
-                bbox=dict(facecolor='white', edgecolor='black', boxstyle='round,pad=0.3'))
+        # Calculer les coordonnées x et y en fonction de l'angle et du rayon
+        x = category_radius * np.cos(mid_angle)
+        y = category_radius * np.sin(mid_angle)
+
+        # Utiliser ax.text pour placer les catégories
+        ax.text(x, y, category_labels[i], horizontalalignment='center', verticalalignment='center', size=14, 
+                bbox=dict(facecolor='white', edgecolor='black', boxstyle='round,pad=0.3'), transform=ax.transData)
 
     # Sauvegarde de l'image dans un buffer
     img = io.BytesIO()
@@ -92,3 +99,4 @@ def generate_chart():
 
 if __name__ == '__main__':
     app.run(debug=True)
+
