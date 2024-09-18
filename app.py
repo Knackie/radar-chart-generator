@@ -1,7 +1,7 @@
 from flask import Flask, render_template, request, send_file
 import matplotlib.pyplot as plt
 import numpy as np
-from math import pi, cos, sin
+from math import pi
 import io
 
 app = Flask(__name__)
@@ -65,11 +65,9 @@ def generate_chart():
 
     # --- Ajouter les labels des critères dans le cercle externe des critères ---
     for i, angle in enumerate(angles[:-1]):
-        x = criteria_radius * cos(angle)
-        y = criteria_radius * sin(angle)
-
         # Utiliser ax.text pour placer les critères autour du cercle
-        ax.text(angle, criteria_radius, categories[i], horizontalalignment='center', size=12, rotation=angle*180/pi)
+        ha = 'left' if np.degrees(angle) < 180 else 'right'
+        ax.text(angle, criteria_radius, categories[i], horizontalalignment=ha, verticalalignment='center', size=12, rotation=np.degrees(angle))
 
     # --- Ajouter les labels des catégories dans le cercle externe des catégories ---
     for i in range(len(category_labels)):
@@ -78,9 +76,9 @@ def generate_chart():
 
         # Calcul de l'angle moyen pour positionner les labels des catégories
         mid_angle = np.mean([angles[start_idx], angles[end_idx - 1]])
-        
+
         # Utiliser ax.text pour placer les catégories
-        ax.text(mid_angle, category_radius, category_labels[i], horizontalalignment='center', size=14, 
+        ax.text(mid_angle, category_radius, category_labels[i], horizontalalignment='center', verticalalignment='center', size=14, 
                 bbox=dict(facecolor='white', edgecolor='black', boxstyle='round,pad=0.3'))
 
     # Sauvegarde de l'image dans un buffer
