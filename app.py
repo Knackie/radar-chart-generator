@@ -51,6 +51,10 @@ def generate_chart():
     # Création du radar chart
     fig, ax = plt.subplots(figsize=(8, 8), subplot_kw=dict(polar=True))
 
+    # Couleurs dégradées pour les cercles de fond (du gris au blanc)
+    for i in range(1, 11):
+        ax.fill_between(np.linspace(0, 2 * pi, 100), i-1, i, color=plt.cm.Greys(1 - i * 0.1), alpha=0.2)
+
     # Dessiner le radar chart avec les valeurs
     ax.fill(angles, values, color='b', alpha=0.25)
     ax.plot(angles, values, color='b', linewidth=2)
@@ -61,7 +65,7 @@ def generate_chart():
     ax.set_yticklabels([str(i) for i in range(1, 11)])  # Afficher les labels des cercles
     ax.set_xticks([])  # Retirer les labels du diagramme
 
-    # Dégradés doux pour les segments Agile (0-4), Hybride (4-8), Prédictive (8-10)
+    # Couleurs douces pour les segments Agile (0-4), Hybride (4-8), Prédictive (8-10)
     ax.fill_between(np.linspace(0, 2 * pi, 100), 0, 4, color='lightgreen', alpha=0.4)  # Agile
     ax.fill_between(np.linspace(0, 2 * pi, 100), 4, 8, color='lightyellow', alpha=0.4)  # Hybride
     ax.fill_between(np.linspace(0, 2 * pi, 100), 8, 10, color='lightcoral', alpha=0.4)  # Prédictive
