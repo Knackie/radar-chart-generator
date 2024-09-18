@@ -61,15 +61,15 @@ def generate_chart():
     ax.set_yticklabels([str(i) for i in range(1, 11)])  # Afficher les labels des cercles
     ax.set_xticks([])  # Retirer les labels du diagramme
 
-    # Couleurs pour les segments Agile (0-4), Hybride (4-8), Prédictive (8-10)
-    ax.fill_between(np.linspace(0, 2 * pi, 100), 0, 4, color='green', alpha=0.2)  # Agile (vert)
-    ax.fill_between(np.linspace(0, 2 * pi, 100), 4, 8, color='yellow', alpha=0.2)  # Hybride (jaune)
-    ax.fill_between(np.linspace(0, 2 * pi, 100), 8, 10, color='red', alpha=0.2)  # Prédictive (rouge)
+    # Dégradés doux pour les segments Agile (0-4), Hybride (4-8), Prédictive (8-10)
+    ax.fill_between(np.linspace(0, 2 * pi, 100), 0, 4, color='lightgreen', alpha=0.4)  # Agile
+    ax.fill_between(np.linspace(0, 2 * pi, 100), 4, 8, color='lightyellow', alpha=0.4)  # Hybride
+    ax.fill_between(np.linspace(0, 2 * pi, 100), 8, 10, color='lightcoral', alpha=0.4)  # Prédictive
 
-    # Ajouter les titres "Agile", "Hybride", "Prédictive" au bord du cercle
-    ax.text(0, 4, 'Agile', horizontalalignment='center', verticalalignment='bottom', size=14)
-    ax.text(0, 8, 'Hybride', horizontalalignment='center', verticalalignment='bottom', size=14)
-    ax.text(0, 10, 'Prédictive', horizontalalignment='center', verticalalignment='bottom', size=14)
+    # Ajuster les positions des titres "Agile", "Hybride", "Prédictive" au bord du cercle
+    ax.text(np.radians(45), 4.2, 'Agile', horizontalalignment='center', verticalalignment='center', size=14)
+    ax.text(np.radians(45), 8.2, 'Hybride', horizontalalignment='center', verticalalignment='center', size=14)
+    ax.text(np.radians(45), 10.2, 'Prédictive', horizontalalignment='center', verticalalignment='center', size=14)
 
     # Sauvegarde de l'image dans un buffer
     img = io.BytesIO()
