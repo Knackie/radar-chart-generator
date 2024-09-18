@@ -47,11 +47,13 @@ def generate_chart():
     # Création du radar chart
     fig, ax = plt.subplots(figsize=(8, 8), subplot_kw=dict(polar=True))
 
-    # Couleurs dégradées pour les zones
-    # Zone Agile (0-4) en dégradé de gris foncé à gris clair
-    ax.fill_between(np.linspace(0, 2 * pi, 100), 0, 4, color='darkgray', alpha=0.4)
-    ax.fill_between(np.linspace(0, 2 * pi, 100), 4, 8, color='silver', alpha=0.4)  # Hybride en gris plus clair
-    ax.fill_between(np.linspace(0, 2 * pi, 100), 8, 10, color='lightgray', alpha=0.4)  # Prédictive en gris très clair
+    # Couleurs dégradées plus marquantes pour les zones
+    # Zone Agile (0-4) en gris très foncé
+    ax.fill_between(np.linspace(0, 2 * pi, 100), 0, 4, color='dimgray', alpha=0.6)
+    # Zone Hybride (4-8) en gris moyen
+    ax.fill_between(np.linspace(0, 2 * pi, 100), 4, 8, color='silver', alpha=0.4)
+    # Zone Prédictive (8-10) en blanc
+    ax.fill_between(np.linspace(0, 2 * pi, 100), 8, 10, color='white', alpha=0.4)
 
     # Dessiner le radar chart avec les valeurs
     ax.fill(angles, values, color='b', alpha=0.25)
