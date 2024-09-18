@@ -45,14 +45,13 @@ def generate_chart():
     angles = [n / float(n_criteria) * 2 * pi for n in range(n_criteria)]
     angles += angles[:1]
 
-    # Décalage en radians (juste pour les traits)
-    offset_20_degrees = np.radians(20)
-    offset_60_degrees = np.radians(60)
+    # Définir des couleurs par catégorie
+    colors_by_category = ['#FF9999', '#99CCFF', '#99FF99']  # Rouge, bleu, vert
 
     # Création du radar chart
     fig, ax = plt.subplots(figsize=(8, 8), subplot_kw=dict(polar=True))
 
-    # Couleurs dégradées plus marquantes pour les zones
+    # Couleurs dégradées pour les zones (Agile, Hybride, Prédictive)
     ax.fill_between(np.linspace(0, 2 * pi, 100), 0, 4, color='dimgray', alpha=0.6)  # Agile en gris foncé
     ax.fill_between(np.linspace(0, 2 * pi, 100), 4, 8, color='silver', alpha=0.4)  # Hybride en gris moyen
     ax.fill_between(np.linspace(0, 2 * pi, 100), 8, 10, color='white', alpha=0.4)  # Prédictive en blanc
@@ -61,9 +60,14 @@ def generate_chart():
     ax.fill(angles, values, color='b', alpha=0.25)
     ax.plot(angles, values, color='b', linewidth=2)
 
-    # Ajouter les grands cercles supplémentaires pour le texte
-    ax.fill_between(np.linspace(0, 2 * pi, 100), 10, 11, color='lightgrey', alpha=0.2)  # Cercle externe (10-11)
-    ax.fill_between(np.linspace(0, 2 * pi, 100), 11, 12, color='lightgrey', alpha=0.2)  # Cercle externe (11-12)
+    # Coloration des sections des cercles 11 et 12 en fonction des catégories
+    for idx, (start, end) in enumerate(category_bounds):
+        color = colors_by_category[idx]
+        # Colorer les sections des critères (cercle 11)
+        for i in range(start, end):
+            ax.fill_between(np.linspace(angles[i], angles[i+1], 100), 10, 11, color=color, alpha=0.2)
+        # Colorer les sections des catégories (cercle 12)
+        ax.fill_between(np.linspace(angles[start], angles[end], 100), 11, 12, color=color, alpha=0.2)
 
     # Configuration des axes (échelle de 0 à 10)
     ax.set_ylim(0, 12)  # Ajustement pour inclure les cercles externes
@@ -73,14 +77,14 @@ def generate_chart():
 
     # --- Diviser le cercle 11 en 9 morceaux (avec un décalage de 20° pour les traits) ---
     for angle in angles[:-1]:
-        ax.plot([angle + offset_20_degrees, angle + offset_20_degrees], [10, 11], color='black', linewidth=2)  # Lignes entre 10 et 11
+        ax.plot([angle, angle], [10, 11], color='black', linewidth=2)  # Lignes entre 10 et 11
 
     # --- Diviser le cercle 12 en 3 morceaux (avec un décalage de 60° pour les traits) ---
     for start, end in category_bounds:
         mid_angle = np.mean(angles[start:end])
-        ax.plot([mid_angle + offset_60_degrees, mid_angle + offset_60_degrees], [11, 12], color='black', linewidth=2)  # Lignes entre 11 et 12
+        ax.plot([mid_angle, mid_angle], [11, 12], color='black', linewidth=2)  # Lignes entre 11 et 12
 
-    # --- Ajouter les valeurs des critères dans la zone 11 (texte incliné) ---
+    # --- Ajouter les valeurs des critères dans la zone 11 ---
     for i, angle in enumerate(angles[:-1]):
         rotation_angle = np.degrees(angle)  # Convertir en degrés pour l'inclinaison
         ha = 'center'  # Centrer horizontalement
@@ -88,7 +92,7 @@ def generate_chart():
             rotation_angle += 180
         ax.text(angle, 11, criteria[i], rotation=rotation_angle, ha=ha, va='center', size=10, weight='bold')
 
-    # --- Ajouter les catégories dans la zone 12 (texte incliné) ---
+    # --- Ajouter les catégories dans la zone 12 ---
     for i, (start, end) in enumerate(category_bounds):
         mid_angle = np.mean(angles[start:end])
         rotation_angle = np.degrees(mid_angle)  # Convertir en degrés pour l'inclinaison
