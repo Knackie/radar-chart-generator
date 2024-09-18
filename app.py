@@ -60,14 +60,19 @@ def generate_chart():
     ax.fill(angles, values, color='b', alpha=0.25)
     ax.plot(angles, values, color='b', linewidth=2)
 
-    # Coloration des sections des cercles 11 et 12 en fonction des catégories
+    # --- Ajustement pour que les couleurs suivent les traits ---
+    # Déplacer les traits et les zones colorées des critères de 20°
     for idx, (start, end) in enumerate(category_bounds):
         color = colors_by_category[idx]
-        # Colorer les sections des critères (cercle 11)
         for i in range(start, end):
-            ax.fill_between(np.linspace(angles[i], angles[i+1], 100), 10, 11, color=color, alpha=0.4)
-        # Colorer les sections des catégories (cercle 12)
-        ax.fill_between(np.linspace(angles[start], angles[end], 100), 11, 12, color=color, alpha=0.4)
+            adjusted_angle_start = angles[i] + np.radians(20)  # Décalage de 20°
+            adjusted_angle_end = angles[i + 1] + np.radians(20)  # Décalage de 20°
+            ax.fill_between(np.linspace(adjusted_angle_start, adjusted_angle_end, 100), 10, 11, color=color, alpha=0.4)
+
+        # Pour les catégories dans le cercle 12
+        adjusted_angle_start = angles[start] + np.radians(20)  # Début de la section avec décalage
+        adjusted_angle_end = angles[end] + np.radians(20)  # Fin de la section avec décalage
+        ax.fill_between(np.linspace(adjusted_angle_start, adjusted_angle_end, 100), 11, 12, color=color, alpha=0.4)
 
     # Configuration des axes (échelle de 0 à 10)
     ax.set_ylim(0, 12)  # Ajustement pour inclure les cercles externes
