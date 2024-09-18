@@ -79,9 +79,9 @@ def generate_chart():
     ax.set_yticklabels([str(i) for i in range(1, 11)])  # Afficher les labels des cercles
     ax.set_xticks([])  # Retirer les labels du diagramme
 
-    # --- Déplacer les traits des critères (cercle 11) ---
+    # --- Déplacer les traits des critères (cercle 11) avec un écart de 20° ---
     for i, angle in enumerate(angles[:-1]):
-        ax.plot([angle, angle], [10, 11], color='black', linewidth=2)  # Lignes entre 10 et 11
+        ax.plot([angle + np.radians(20)], [10, 11], color='black', linewidth=2)  # Lignes entre 10 et 11 avec un décalage de 20°
 
     # --- Déplacer les traits des catégories (cercle 12) ---
     for start, end in category_bounds:
@@ -91,7 +91,6 @@ def generate_chart():
     # --- Ajouter les valeurs des critères dans la zone 11 ---
     for i, angle in enumerate(angles[:-1]):
         rotation_angle = np.degrees(angle) + 90  # Tourner chaque critère de 90°
-
         ha = 'center'  # Centrer horizontalement
 
         # Ajuster la rotation pour les critères
