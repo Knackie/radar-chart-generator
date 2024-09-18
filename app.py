@@ -67,10 +67,14 @@ def generate_chart():
     ax.set_yticklabels([str(i) for i in range(1, 11)])  # Afficher les labels des cercles
     ax.set_xticks([])  # Retirer les labels du diagramme
 
-    # Ajouter les titres "Agile", "Hybride", "Prédictive" au bord du cercle
-    ax.text(np.radians(45), 4.2, 'Agile', horizontalalignment='center', verticalalignment='center', size=14)
-    ax.text(np.radians(45), 8.2, 'Hybride', horizontalalignment='center', verticalalignment='center', size=14)
-    ax.text(np.radians(45), 10.2, 'Prédictive', horizontalalignment='center', verticalalignment='center', size=14)
+    # --- Diviser le cercle 11 en 9 morceaux ---
+    for angle in angles[:-1]:
+        ax.plot([angle, angle], [10, 11], color='black', linewidth=2)  # Lignes entre 10 et 11
+
+    # --- Diviser le cercle 12 en 3 morceaux (pour les catégories) ---
+    for start, end in category_bounds:
+        mid_angle = np.mean(angles[start:end])
+        ax.plot([mid_angle, mid_angle], [11, 12], color='black', linewidth=2)  # Lignes entre 11 et 12
 
     # --- Ajouter les valeurs des critères dans la zone 11 ---
     for i, angle in enumerate(angles[:-1]):
