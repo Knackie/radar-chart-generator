@@ -60,18 +60,28 @@ def generate_chart():
         showlegend=False,
     )
 
-    # Add external circle and divide into 9 segments for criteria labels
+    # Divide the outer circle into 9 segments and position the labels
     n_criteria = 9
     angle_step = 360 / n_criteria
-    radius = 0.7  # Adjust the radius for the outer circle
+    radius = 1.15  # Adjust the radius for the outer circle (1.0 is the edge of the chart)
 
     # Create a list of positions around the outer circle for the criteria labels
     annotations = []
     for i, label in enumerate(all_labels):
         angle = angle_step * i
-        x = 0.5 + radius * math.cos(math.radians(angle - 90))  # Adjust for correct start angle
-        y = 0.5 + radius * math.sin(math.radians(angle - 90))
+        angle_rad = math.radians(angle - 90)  # Adjust for correct start angle (start from top)
 
+        # Calculate the x and y positions based on the angle and radius
+        x = 0.5 + radius * math.cos(angle_rad)
+        y = 0.5 + radius * math.sin(angle_rad)
+
+        # Adjust text rotation for better alignment in each segment
+        if 0 <= angle < 180:
+            textangle = angle - 90
+        else:
+            textangle = angle + 90
+
+        # Add the annotation for each criterion
         annotations.append(
             dict(
                 x=x, y=y,
@@ -80,7 +90,7 @@ def generate_chart():
                 showarrow=False,
                 font=dict(size=12),
                 align="center",
-                textangle=angle_step * i - 90  # Rotate text to align with the circle
+                textangle=textangle  # Rotate text to align with the circle
             )
         )
 
