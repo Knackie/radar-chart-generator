@@ -60,18 +60,17 @@ def generate_chart():
     ax.fill(angles, values, color='b', alpha=0.25)
     ax.plot(angles, values, color='b', linewidth=2)
 
-    # --- Ajustement pour que les couleurs suivent les traits ---
-    # Déplacer les traits et les zones colorées des critères de 20°
+    # --- Correction des couleurs et des angles pour les catégories ---
     for idx, (start, end) in enumerate(category_bounds):
         color = colors_by_category[idx]
         for i in range(start, end):
-            adjusted_angle_start = angles[i] + np.radians(20)  # Décalage de 20°
-            adjusted_angle_end = angles[i + 1] + np.radians(20)  # Décalage de 20°
+            adjusted_angle_start = angles[i]  # Pas de décalage ici pour les critères
+            adjusted_angle_end = angles[i + 1]
             ax.fill_between(np.linspace(adjusted_angle_start, adjusted_angle_end, 100), 10, 11, color=color, alpha=0.4)
 
-        # Pour les catégories dans le cercle 12
-        adjusted_angle_start = angles[start] + np.radians(20)  # Début de la section avec décalage
-        adjusted_angle_end = angles[end] + np.radians(20)  # Fin de la section avec décalage
+        # Remplir correctement chaque catégorie dans le cercle externe
+        adjusted_angle_start = angles[start]
+        adjusted_angle_end = angles[end]
         ax.fill_between(np.linspace(adjusted_angle_start, adjusted_angle_end, 100), 11, 12, color=color, alpha=0.4)
 
     # Configuration des axes (échelle de 0 à 10)
@@ -80,22 +79,19 @@ def generate_chart():
     ax.set_yticklabels([str(i) for i in range(1, 11)])  # Afficher les labels des cercles
     ax.set_xticks([])  # Retirer les labels du diagramme
 
-    # --- Déplacer les traits des critères (cercle 11) de 20° ---
+    # --- Déplacer les traits des critères (cercle 11) ---
     for i, angle in enumerate(angles[:-1]):
-        adjusted_angle = angle + np.radians(20)  # Décalage de 20° en radians
-        ax.plot([adjusted_angle, adjusted_angle], [10, 11], color='black', linewidth=2)  # Lignes entre 10 et 11
+        ax.plot([angle, angle], [10, 11], color='black', linewidth=2)  # Lignes entre 10 et 11
 
-    # --- Déplacer les traits des catégories (cercle 12) de 20° ---
+    # --- Déplacer les traits des catégories (cercle 12) ---
     for start, end in category_bounds:
         mid_angle = np.mean(angles[start:end])
-        adjusted_angle = mid_angle + np.radians(20)  # Décalage de 20° en radians
-        ax.plot([adjusted_angle, adjusted_angle], [11, 12], color='black', linewidth=2)  # Lignes entre 11 et 12
+        ax.plot([mid_angle, mid_angle], [11, 12], color='black', linewidth=2)  # Lignes entre 11 et 12
 
     # --- Ajouter les valeurs des critères dans la zone 11 ---
     for i, angle in enumerate(angles[:-1]):
         rotation_angle = np.degrees(angle) + 90  # Tourner chaque critère de 90°
 
-        # Appliquer une rotation spécifique pour le critère "Adhésion"
         ha = 'center'  # Centrer horizontalement
 
         # Ajuster la rotation pour les critères
