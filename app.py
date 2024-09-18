@@ -57,6 +57,8 @@ def generate_chart():
 
     # Configuration des axes (échelle de 0 à 10)
     ax.set_ylim(0, 10)
+    ax.set_yticks(range(1, 11))  # Afficher les cercles de 1 à 10
+    ax.set_yticklabels([str(i) for i in range(1, 11)])  # Afficher les labels des cercles
     ax.set_xticks([])  # Retirer les labels du diagramme
 
     # Couleurs pour les segments Agile (0-4), Hybride (4-8), Prédictive (8-10)
