@@ -114,4 +114,27 @@ def generate_chart():
             rotation_angle += 180
 
         # Ajouter le texte du critère avec l'angle correct
-        ax.text(angle, 11, criteria[i], rotation=rotation_angle, ha=ha, va='center', size=10, weight='b
+        ax.text(angle, 11, criteria[i], rotation=rotation_angle, ha=ha, va='center', size=10, weight='bold')
+
+    # --- Ajouter les catégories dans la zone 12 ---
+    for i, (start, end) in enumerate(category_bounds):
+        mid_angle = np.mean(angles[start:end])
+        rotation_angle = np.degrees(mid_angle) + 90  # Ajouter 90° de rotation pour chaque catégorie
+
+        ha = 'center'  # Centrer horizontalement
+        if 90 < rotation_angle < 270:  # Ajuster pour les textes au bas du cercle
+            rotation_angle += 180
+        ax.text(mid_angle, 12, categories[i], rotation=rotation_angle, ha=ha, va='center', size=12, weight='bold')
+
+    # Sauvegarde de l'image dans un buffer
+    img = io.BytesIO()
+    plt.savefig(img, format='png')
+    img.seek(0)
+
+    # Fermer la figure pour libérer la mémoire
+    plt.close(fig)
+
+    return send_file(img, mimetype='image/png')
+
+if __name__ == '__main__':
+    app.run(debug=True)
