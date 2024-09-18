@@ -56,13 +56,13 @@ def generate_chart():
     ax.plot(angles, values, color='b', linewidth=2)
 
     # Configuration des axes
-    ax.set_yticklabels(['1', '2', '3', '4', '5'])  # Afficher les étiquettes radiales
-    ax.set_ylim(0, 5)  # Correction de l'échelle pour les cercles
+    ax.set_yticklabels(['2', '4', '6', '8', '10'])  # Ajuster les étiquettes radiales
+    ax.set_ylim(0, 10)  # Ajuster l'échelle pour aller jusqu'à 10
     ax.set_xticks([])  # Masquer les labels dans le diagramme
 
     # Ajustement du rayon des cercles externes
-    criteria_radius = 1.8  # Ajustement pour les critères
-    category_radius = 2.2  # Ajustement pour les catégories
+    criteria_radius = 11  # Rayon pour placer les critères en dehors du radar chart
+    category_radius = 13  # Rayon pour placer les catégories en dehors du radar chart
 
     # Ajouter les labels des critères dans le cercle externe des critères
     for i, angle in enumerate(angles[:-1]):
