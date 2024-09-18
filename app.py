@@ -59,33 +59,25 @@ def generate_chart():
     ax.set_yticklabels([])  # Masquer les étiquettes radiales
     ax.set_xticks([])  # Masquer les labels dans le diagramme
 
-    # Ajustement du rayon des cercles externes
-    criteria_radius = 1.3  # Premier cercle externe pour les critères
-    category_radius = 1.6  # Second cercle externe pour les catégories
-
-    # --- Ajouter les labels des critères dans le cercle externe des critères ---
-    # Chaque étiquette sera placée sur le premier cercle externe (criteria_radius)
+    # Ajouter les labels des critères dans le cercle externe des critères
+    criteria_radius = 1.2
     for i, angle in enumerate(angles[:-1]):
-        x = criteria_radius * cos(angle)
-        y = criteria_radius * sin(angle)
+        x = 0.5 + criteria_radius * cos(angle) / 2  # Calcul dans les coordonnées de la figure
+        y = 0.5 + criteria_radius * sin(angle) / 2
+        ax.annotate(categories[i], (x, y), xycoords='figure fraction', ha='center', va='center', size=12)
 
-        # Placer les critères autour du premier cercle externe
-        ax.text(x, y, categories[i], horizontalalignment='center', verticalalignment='center', size=12)
-
-    # --- Ajouter les labels des catégories dans le cercle externe des catégories ---
-    # Chaque étiquette de catégorie sera placée sur le deuxième cercle externe (category_radius)
+    # Ajouter les labels des catégories dans le cercle externe des catégories
+    category_radius = 1.4
     for i in range(len(category_labels)):
         start_idx = category_boundaries[i]
         end_idx = category_boundaries[i + 1] if i + 1 < len(category_boundaries) else len(categories)
 
         # Calcul de l'angle moyen pour positionner les labels des catégories
         mid_angle = np.mean([angles[start_idx], angles[end_idx - 1]])
-        x = category_radius * cos(mid_angle)
-        y = category_radius * sin(mid_angle)
-
-        # Placer les noms des catégories dans le cercle externe plus large
-        ax.text(x, y, category_labels[i], horizontalalignment='center', verticalalignment='center', size=14, 
-                bbox=dict(facecolor='white', edgecolor='black', boxstyle='round,pad=0.3'))
+        x = 0.5 + category_radius * cos(mid_angle) / 2  # Calcul dans les coordonnées de la figure
+        y = 0.5 + category_radius * sin(mid_angle) / 2
+        ax.annotate(category_labels[i], (x, y), xycoords='figure fraction', ha='center', va='center', size=14,
+                    bbox=dict(facecolor='white', edgecolor='black', boxstyle='round,pad=0.3'))
 
     # Sauvegarde de l'image dans un buffer
     img = io.BytesIO()
