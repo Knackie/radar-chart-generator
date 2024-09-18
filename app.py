@@ -91,7 +91,7 @@ def generate_chart():
 
     # --- Ajouter les valeurs des critères dans la zone 11 ---
     for i, angle in enumerate(angles[:-1]):
-        rotation_angle = np.degrees(angle) + 90  # Tourner chaque critère de 90°
+        rotation_angle = np.degrees(angle) - 90  # Tourner chaque critère de -90° pour incliner vers l'intérieur
         ha = 'center'  # Centrer horizontalement
 
         # Ajuster la rotation pour les critères
@@ -104,7 +104,7 @@ def generate_chart():
     # --- Ajouter les catégories dans la zone 12 ---
     for i, (start, end) in enumerate(category_bounds):
         mid_angle = np.mean(angles[start:end])
-        rotation_angle = np.degrees(mid_angle) + 90  # Ajouter 90° de rotation pour chaque catégorie
+        rotation_angle = np.degrees(mid_angle) - 90  # Ajouter -90° de rotation pour chaque catégorie
 
         ha = 'center'  # Centrer horizontalement
         if 90 < rotation_angle < 270:  # Ajuster pour les textes au bas du cercle
