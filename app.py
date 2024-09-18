@@ -48,20 +48,21 @@ def generate_chart():
     fig, ax = plt.subplots(figsize=(8, 8), subplot_kw=dict(polar=True))
 
     # Couleurs dégradées plus marquantes pour les zones
-    # Zone Agile (0-4) en gris très foncé
-    ax.fill_between(np.linspace(0, 2 * pi, 100), 0, 4, color='dimgray', alpha=0.6)
-    # Zone Hybride (4-8) en gris moyen
-    ax.fill_between(np.linspace(0, 2 * pi, 100), 4, 8, color='silver', alpha=0.4)
-    # Zone Prédictive (8-10) en blanc
-    ax.fill_between(np.linspace(0, 2 * pi, 100), 8, 10, color='white', alpha=0.4)
+    ax.fill_between(np.linspace(0, 2 * pi, 100), 0, 4, color='dimgray', alpha=0.6)  # Agile en gris foncé
+    ax.fill_between(np.linspace(0, 2 * pi, 100), 4, 8, color='silver', alpha=0.4)  # Hybride en gris moyen
+    ax.fill_between(np.linspace(0, 2 * pi, 100), 8, 10, color='white', alpha=0.4)  # Prédictive en blanc
 
     # Dessiner le radar chart avec les valeurs
     ax.fill(angles, values, color='b', alpha=0.25)
     ax.plot(angles, values, color='b', linewidth=2)
 
+    # Ajouter les grands cercles supplémentaires pour le texte
+    ax.fill_between(np.linspace(0, 2 * pi, 100), 10, 11, color='lightgrey', alpha=0.2)  # Cercle externe (10-11)
+    ax.fill_between(np.linspace(0, 2 * pi, 100), 11, 12, color='lightgrey', alpha=0.2)  # Cercle externe (11-12)
+
     # Configuration des axes (échelle de 0 à 10)
-    ax.set_ylim(0, 10)
-    ax.set_yticks(range(1, 11))  # Afficher les cercles de 1 à 10
+    ax.set_ylim(0, 12)  # Ajustement pour inclure les cercles externes
+    ax.set_yticks(range(1, 11))  # Afficher les cercles de 1 à 10 uniquement pour les valeurs
     ax.set_yticklabels([str(i) for i in range(1, 11)])  # Afficher les labels des cercles
     ax.set_xticks([])  # Retirer les labels du diagramme
 
@@ -69,6 +70,10 @@ def generate_chart():
     ax.text(np.radians(45), 4.2, 'Agile', horizontalalignment='center', verticalalignment='center', size=14)
     ax.text(np.radians(45), 8.2, 'Hybride', horizontalalignment='center', verticalalignment='center', size=14)
     ax.text(np.radians(45), 10.2, 'Prédictive', horizontalalignment='center', verticalalignment='center', size=14)
+
+    # Ajouter du texte dans les zones (10-11) et (11-12)
+    ax.text(0, 10.5, 'Zone de texte 1', horizontalalignment='center', verticalalignment='center', size=12, weight='bold')
+    ax.text(0, 11.5, 'Zone de texte 2', horizontalalignment='center', verticalalignment='center', size=12, weight='bold')
 
     # Sauvegarde de l'image dans un buffer
     img = io.BytesIO()
