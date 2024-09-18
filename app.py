@@ -84,16 +84,17 @@ def generate_chart():
         mid_angle = np.mean(angles[start:end])
         ax.plot([mid_angle, mid_angle], [11, 12], color='black', linewidth=2)  # Lignes entre 11 et 12
 
-    # --- Ajouter les valeurs des critères dans la zone 11 avec une rotation spécifique pour "Adhésion" ---
+    # --- Ajouter les valeurs des critères dans la zone 11 ---
     for i, angle in enumerate(angles[:-1]):
-        rotation_angle = np.degrees(angle)  # Convertir en degrés
-        ha = 'center'  # Centrer horizontalement
+        rotation_angle = np.degrees(angle) + 90  # Tourner chaque critère de 90°
 
         # Appliquer une rotation spécifique pour le critère "Adhésion"
         if criteria[i] == 'Adhésion':
-            rotation_angle += 180  # Tourner "Adhésion" de 180°
+            rotation_angle += 180  # Tourner "Adhésion" de 270° au total (90° + 180°)
 
-        # Ajuster la rotation pour les autres critères
+        ha = 'center'  # Centrer horizontalement
+
+        # Ajuster la rotation pour les critères
         if 90 < rotation_angle < 270:  # Ajuster pour les textes au bas du cercle
             rotation_angle += 180
 
@@ -103,7 +104,7 @@ def generate_chart():
     # --- Ajouter les catégories dans la zone 12 ---
     for i, (start, end) in enumerate(category_bounds):
         mid_angle = np.mean(angles[start:end])
-        rotation_angle = np.degrees(mid_angle)  # Convertir en degrés pour l'inclinaison
+        rotation_angle = np.degrees(mid_angle) + 90  # Ajouter 90° de rotation pour chaque catégorie
         ha = 'center'  # Centrer horizontalement
         if 90 < rotation_angle < 270:  # Ajuster pour les textes au bas du cercle
             rotation_angle += 180
