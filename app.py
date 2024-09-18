@@ -106,8 +106,8 @@ def generate_chart():
         mid_angle = np.mean(angles[start:end])
         rotation_angle = np.degrees(mid_angle) + 90  # Ajouter 90° de rotation pour chaque catégorie
 
-        # Appliquer un décalage spécifique de 20° vers la droite pour "Équipe"
-        if categories[i] == 'Équipe':
+        # Appliquer un décalage spécifique de 20° vers la droite pour "Équipe" et "Projet"
+        if categories[i] == 'Équipe' or categories[i] == 'Projet':
             mid_angle += np.radians(20)
 
         ha = 'center'  # Centrer horizontalement
