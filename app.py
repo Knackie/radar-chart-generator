@@ -75,9 +75,17 @@ def generate_chart():
 
     # Configuration des axes (échelle de 0 à 10)
     ax.set_ylim(0, 12)  # Ajustement pour inclure les cercles externes
-    ax.set_yticks(range(1, 11))  # Afficher les cercles de 1 à 10 uniquement pour les valeurs
-    ax.set_yticklabels([str(i) for i in range(1, 11)])  # Afficher les labels des cercles
-    ax.set_xticks([])  # Retirer les labels du diagramme
+    ax.set_yticks(range(1, 11))  # Afficher les cercles de 1 à 10
+    ax.set_yticklabels([])  # Ne pas afficher les labels des cercles (pour éviter l'encombrement)
+
+    # --- Ajouter les valeurs de 1 à 10 autour du cercle inférieur ---
+    for i in range(1, 11):
+        angle_position = (i - 1) * (2 * np.pi / 10)  # Calculer la position en angle pour chaque valeur
+        ax.text(angle_position, 10.5, str(i), ha='center', va='center', size=10, color='black')  # Afficher les graduations autour du cercle inférieur
+
+    # Supprimer les lignes indésirables (par exemple des lignes radiales entre certaines valeurs)
+    for spine in ax.spines.values():
+        spine.set_visible(False)  # Masquer les lignes radiales
 
     # --- Déplacer les traits des critères (cercle 11) avec un décalage de 20° ---
     for i, angle in enumerate(angles[:-1]):
