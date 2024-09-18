@@ -60,33 +60,18 @@ def generate_chart():
     ax.fill(angles, values, color='b', alpha=0.25)
     ax.plot(angles, values, color='b', linewidth=2)
 
-    # --- Décaler la partie verte (Équipe) et la partie violette (Projet) de 20° à droite ---
+    # --- Colorier les zones 11 et 12 pour chaque catégorie avec décalage de 60° à gauche et à droite ---
     for idx, (start, end) in enumerate(category_bounds):
         color = colors_by_category[idx]
-        if categories[idx] == 'Équipe' or categories[idx] == 'Projet':
-            # Décaler les angles pour les catégories "Équipe" (vert) et "Projet" (violet) de 20° à droite
-            for i in range(start, end):
-                adjusted_angle_start = angles[i] + np.radians(20)
-                adjusted_angle_end = angles[i + 1] + np.radians(20)
-                ax.fill_between(np.linspace(adjusted_angle_start, adjusted_angle_end, 100), 10, 11, color=color, alpha=0.4)
-        else:
-            # Aucune modification pour les autres catégories
-            for i in range(start, end):
-                adjusted_angle_start = angles[i]
-                adjusted_angle_end = angles[i + 1]
-                ax.fill_between(np.linspace(adjusted_angle_start, adjusted_angle_end, 100), 10, 11, color=color, alpha=0.4)
 
-    # Remplir correctement chaque catégorie dans le cercle externe
-    for idx, (start, end) in enumerate(category_bounds):
-        color = colors_by_category[idx]
-        if categories[idx] == 'Équipe' or categories[idx] == 'Projet':
-            adjusted_angle_start = angles[start] + np.radians(20)
-            adjusted_angle_end = angles[end] + np.radians(20)
-            ax.fill_between(np.linspace(adjusted_angle_start, adjusted_angle_end, 100), 11, 12, color=color, alpha=0.4)
-        else:
-            adjusted_angle_start = angles[start]
-            adjusted_angle_end = angles[end]
-            ax.fill_between(np.linspace(adjusted_angle_start, adjusted_angle_end, 100), 11, 12, color=color, alpha=0.4)
+        # Calculer les angles décalés pour chaque catégorie
+        angle_central = np.mean(angles[start:end])
+        angle_debut = angle_central - np.radians(60)
+        angle_fin = angle_central + np.radians(60)
+
+        # Colorier le cercle 11 et 12 pour chaque catégorie avec un décalage de 60° dans les deux directions
+        ax.fill_between(np.linspace(angle_debut, angle_fin, 100), 10, 11, color=color, alpha=0.4)  # Cercle 11
+        ax.fill_between(np.linspace(angle_debut, angle_fin, 100), 11, 12, color=color, alpha=0.4)  # Cercle 12
 
     # Configuration des axes (échelle de 0 à 10)
     ax.set_ylim(0, 12)  # Ajustement pour inclure les cercles externes
