@@ -96,9 +96,6 @@ def generate_chart():
         rotation_angle = np.degrees(angle) + 90  # Tourner chaque critère de 90°
 
         # Appliquer une rotation spécifique pour le critère "Adhésion"
-        if criteria[i] == 'Adhésion':
-            rotation_angle += 180  # Tourner "Adhésion" de 270° au total (90° + 180°)
-
         ha = 'center'  # Centrer horizontalement
 
         # Ajuster la rotation pour les critères
