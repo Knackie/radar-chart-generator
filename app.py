@@ -28,20 +28,21 @@ def generate_chart():
     acces = float(request.form['acces'])
 
     # Les catégories et leurs critères
-    categories = [
+    categories = ['Culture', 'Projet', 'Équipe']  # Noms des catégories
+    category_bounds = [(0, 3), (3, 6), (6, 9)]  # Index des critères par catégorie
+    criteria = [
         'Adhésion', 'Confiance', 'Prise de décision',  # Culture
         'Changement', 'Criticité', 'Livraison',  # Projet
         'Taille de l\'équipe', 'Expérience', 'Accès'  # Équipe
     ]
     
-    n_categories = len(categories)
-
     # Valeurs saisies pour les critères
     values = [adhesion, confiance, prise_decision, changement, criticite, livraison, taille_equipe, experience, acces]
     values += values[:1]  # Boucler pour fermer le radar chart
 
     # Calcul des angles pour chaque critère
-    angles = [n / float(n_categories) * 2 * pi for n in range(n_categories)]
+    n_criteria = len(criteria)
+    angles = [n / float(n_criteria) * 2 * pi for n in range(n_criteria)]
     angles += angles[:1]
 
     # Création du radar chart
@@ -71,9 +72,14 @@ def generate_chart():
     ax.text(np.radians(45), 8.2, 'Hybride', horizontalalignment='center', verticalalignment='center', size=14)
     ax.text(np.radians(45), 10.2, 'Prédictive', horizontalalignment='center', verticalalignment='center', size=14)
 
-    # Ajouter du texte dans les zones (10-11) et (11-12)
-    ax.text(0, 10.5, 'Zone de texte 1', horizontalalignment='center', verticalalignment='center', size=12, weight='bold')
-    ax.text(0, 11.5, 'Zone de texte 2', horizontalalignment='center', verticalalignment='center', size=12, weight='bold')
+    # --- Ajouter les valeurs des critères dans la zone 11 ---
+    for i, angle in enumerate(angles[:-1]):
+        ax.text(angle, 11, criteria[i], horizontalalignment='center', verticalalignment='center', size=10, weight='bold')
+
+    # --- Ajouter les catégories dans la zone 12 ---
+    for i, (start, end) in enumerate(category_bounds):
+        mid_angle = np.mean(angles[start:end])
+        ax.text(mid_angle, 12, categories[i], horizontalalignment='center', verticalalignment='center', size=12, weight='bold')
 
     # Sauvegarde de l'image dans un buffer
     img = io.BytesIO()
