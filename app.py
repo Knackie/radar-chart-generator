@@ -81,6 +81,7 @@ def generate_chart():
 
     # --- Déplacer les traits des critères (cercle 11) avec un écart de 20° ---
     for i, angle in enumerate(angles[:-1]):
+        # Décalage de 20° uniquement pour tracer les lignes
         ax.plot([angle, angle], [10, 11], color='black', linewidth=2)  # Lignes entre 10 et 11
 
     # --- Déplacer les traits des catégories (cercle 12) ---
@@ -100,10 +101,10 @@ def generate_chart():
         # Ajouter le texte du critère avec l'angle correct
         ax.text(angle, 11, criteria[i], rotation=rotation_angle, ha=ha, va='center', size=10, weight='bold')
 
-    # --- Ajouter les catégories dans la zone 12 avec décalage de 40° ---
+    # --- Ajouter les catégories dans la zone 12 ---
     for i, (start, end) in enumerate(category_bounds):
         mid_angle = np.mean(angles[start:end])
-        rotation_angle = np.degrees(mid_angle) + 90 + 40  # Ajouter 90° de rotation pour chaque catégorie, puis 40° de décalage supplémentaire
+        rotation_angle = np.degrees(mid_angle) + 90  # Ajouter 90° de rotation pour chaque catégorie
         ha = 'center'  # Centrer horizontalement
         if 90 < rotation_angle < 270:  # Ajuster pour les textes au bas du cercle
             rotation_angle += 180
