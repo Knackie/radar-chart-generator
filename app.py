@@ -1,7 +1,7 @@
 from flask import Flask, render_template, request, send_file
 import matplotlib.pyplot as plt
 import numpy as np
-from math import pi, cos, sin
+from math import pi
 import io
 
 app = Flask(__name__)
@@ -59,18 +59,14 @@ def generate_chart():
     ax.set_yticklabels([])  # Masquer les étiquettes radiales
     ax.set_xticks([])  # Masquer les labels dans le diagramme
 
-    # --- Ajustement des rayons des cercles externes ---
-    criteria_radius = 1.3  # Rayon ajusté pour les critères
-    category_radius = 1.8  # Rayon ajusté pour les catégories
+    # --- Rayon ajusté pour placer les étiquettes des critères et des catégories ---
+    criteria_radius = 1.5
+    category_radius = 2.0
 
     # --- Ajouter les labels des critères dans le cercle externe des critères ---
     for i, angle in enumerate(angles[:-1]):
-        # Calcul des coordonnées cartésiennes en fonction de l'angle et du rayon
-        x = criteria_radius * cos(angle)
-        y = criteria_radius * sin(angle)
-
-        # Utiliser ax.text pour placer les critères autour du cercle externe
-        ax.text(x, y, categories[i], horizontalalignment='center', verticalalignment='center', size=12)
+        # Utiliser des coordonnées polaires directement
+        ax.text(angle, criteria_radius, categories[i], horizontalalignment='center', verticalalignment='center', size=12)
 
     # --- Ajouter les labels des catégories dans le cercle externe des catégories ---
     for i in range(len(category_labels)):
@@ -80,12 +76,8 @@ def generate_chart():
         # Calcul de l'angle moyen pour positionner les labels des catégories
         mid_angle = np.mean([angles[start_idx], angles[end_idx - 1]])
 
-        # Calcul des coordonnées cartésiennes pour les catégories
-        x = category_radius * cos(mid_angle)
-        y = category_radius * sin(mid_angle)
-
-        # Utiliser ax.text pour placer les catégories
-        ax.text(x, y, category_labels[i], horizontalalignment='center', verticalalignment='center', size=14, 
+        # Utiliser des coordonnées polaires pour placer les catégories
+        ax.text(mid_angle, category_radius, category_labels[i], horizontalalignment='center', verticalalignment='center', size=14, 
                 bbox=dict(facecolor='white', edgecolor='black', boxstyle='round,pad=0.3'))
 
     # Sauvegarde de l'image dans un buffer
