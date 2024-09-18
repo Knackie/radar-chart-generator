@@ -3,85 +3,43 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Générateur de Radar Chart - Catégories Fixes</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            text-align: center;
-            margin: 0;
-            padding: 0;
-        }
-        .container {
-            max-width: 800px;
-            margin: 50px auto;
-            padding: 20px;
-        }
-        form {
-            margin-bottom: 30px;
-        }
-        .slider-label {
-            margin: 10px 0;
-        }
-        .slider {
-            width: 100%;
-            margin: 10px 0;
-        }
-        img {
-            margin-top: 20px;
-            max-width: 100%;
-        }
-    </style>
+    <title>Radar Chart avec catégories</title>
 </head>
 <body>
-
-<div class="container">
-    <h1>Générateur de Radar Chart</h1>
-    
+    <h1>Générateur de Radar Chart avec Catégories</h1>
     <form method="POST" action="/generate_chart">
         <!-- Catégorie 1 : Culture -->
         <h2>Catégorie 1 : Culture</h2>
-        <div>
-            <label class="slider-label" for="adhesion">Adhésion :</label>
-            <input type="range" id="adhesion" name="adhesion" class="slider" min="0" max="10" value="5">
-        </div>
-        <div>
-            <label class="slider-label" for="confiance">Confiance :</label>
-            <input type="range" id="confiance" name="confiance" class="slider" min="0" max="10" value="5">
-        </div>
-        <div>
-            <label class="slider-label" for="prise_decision">Prise de décision :</label>
-            <input type="range" id="prise_decision" name="prise_decision" class="slider" min="0" max="10" value="5">
-        </div>
+        <label for="adhesion">Adhésion :</label>
+        <input type="range" id="adhesion" name="adhesion" min="0" max="10" value="5"><br>
+
+        <label for="confiance">Confiance :</label>
+        <input type="range" id="confiance" name="confiance" min="0" max="10" value="5"><br>
+
+        <label for="prise_decision">Prise de décision :</label>
+        <input type="range" id="prise_decision" name="prise_decision" min="0" max="10" value="5"><br>
 
         <!-- Catégorie 2 : Projet -->
         <h2>Catégorie 2 : Projet</h2>
-        <div>
-            <label class="slider-label" for="changement">Changement :</label>
-            <input type="range" id="changement" name="changement" class="slider" min="0" max="10" value="5">
-        </div>
-        <div>
-            <label class="slider-label" for="criticite">Criticité :</label>
-            <input type="range" id="criticite" name="criticite" class="slider" min="0" max="10" value="5">
-        </div>
-        <div>
-            <label class="slider-label" for="livraison">Livraison :</label>
-            <input type="range" id="livraison" name="livraison" class="slider" min="0" max="10" value="5">
-        </div>
+        <label for="changement">Changement :</label>
+        <input type="range" id="changement" name="changement" min="0" max="10" value="5"><br>
+
+        <label for="criticite">Criticité :</label>
+        <input type="range" id="criticite" name="criticite" min="0" max="10" value="5"><br>
+
+        <label for="livraison">Livraison :</label>
+        <input type="range" id="livraison" name="livraison" min="0" max="10" value="5"><br>
 
         <!-- Catégorie 3 : Équipe -->
         <h2>Catégorie 3 : Équipe</h2>
-        <div>
-            <label class="slider-label" for="taille_equipe">Taille de l'équipe :</label>
-            <input type="range" id="taille_equipe" name="taille_equipe" class="slider" min="0" max="10" value="5">
-        </div>
-        <div>
-            <label class="slider-label" for="experience">Expérience :</label>
-            <input type="range" id="experience" name="experience" class="slider" min="0" max="10" value="5">
-        </div>
-        <div>
-            <label class="slider-label" for="acces">Accès :</label>
-            <input type="range" id="acces" name="acces" class="slider" min="0" max="10" value="5">
-        </div>
+        <label for="taille_equipe">Taille de l'équipe :</label>
+        <input type="range" id="taille_equipe" name="taille_equipe" min="0" max="10" value="5"><br>
+
+        <label for="experience">Expérience :</label>
+        <input type="range" id="experience" name="experience" min="0" max="10" value="5"><br>
+
+        <label for="acces">Accès :</label>
+        <input type="range" id="acces" name="acces" min="0" max="10" value="5"><br>
 
         <button type="submit">Générer le Radar Chart</button>
     </form>
@@ -89,9 +47,6 @@
     {% if image_path %}
     <h2>Résultat :</h2>
     <img src="{{ image_path }}" alt="Radar Chart">
-    <p>Valeurs utilisées : {{ values }}</p>
     {% endif %}
-</div>
-
 </body>
 </html>
