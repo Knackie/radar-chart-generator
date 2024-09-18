@@ -78,6 +78,8 @@ def generate_chart():
     ax.set_yticks(range(1, 11))  # Afficher les cercles de 1 à 10 uniquement pour les valeurs
     ax.set_yticklabels([str(i) for i in range(1, 11)])  # Afficher les labels des cercles
     ax.set_xticks([])  # Retirer les labels du diagramme
+    ax.set_yticklabels([])  # Ne pas afficher les labels des cercles (pour éviter l'encombrement)
+
     # Supprimer les lignes indésirables (par exemple des lignes radiales entre certaines valeurs)
     for spine in ax.spines.values():
         spine.set_visible(False)  # Masquer les lignes radiales
@@ -102,7 +104,7 @@ def generate_chart():
             rotation_angle += 180
 
         # Ajouter le texte du critère dans un cercle inférieur
-        ax.text(angle, 10.5, criteria[i], rotation=rotation_angle, ha=ha, va='center', size=10, weight='bold')  # Déplacé à 10.5 pour descendre les légendes
+        ax.text(angle, 10.3, criteria[i], rotation=rotation_angle, ha=ha, va='center', size=10, weight='bold')  # Déplacé à 10.5 pour descendre les légendes
 
     # --- Ajouter les catégories dans la zone 12 ---
     for i, (start, end) in enumerate(category_bounds):
