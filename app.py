@@ -105,6 +105,11 @@ def generate_chart():
     for i, (start, end) in enumerate(category_bounds):
         mid_angle = np.mean(angles[start:end])
         rotation_angle = np.degrees(mid_angle) + 90  # Ajouter 90° de rotation pour chaque catégorie
+
+        # Appliquer un décalage spécifique de 60° pour "Équipe"
+        if categories[i] == 'Équipe':
+            mid_angle += np.radians(60)
+
         ha = 'center'  # Centrer horizontalement
         if 90 < rotation_angle < 270:  # Ajuster pour les textes au bas du cercle
             rotation_angle += 180
