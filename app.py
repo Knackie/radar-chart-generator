@@ -1,250 +1,98 @@
-from flask import Flask, render_template, request
-import plotly.graph_objs as go
-import plotly.io as pio
-import math
+from flask import Flask, render_template, request, send_file
+import matplotlib.pyplot as plt
+import numpy as np
+from math import pi
+import io
 
 app = Flask(__name__)
 
+# Route principale pour afficher le formulaire
 @app.route('/')
 def index():
     return render_template('index.html')
 
+# Route pour générer le radar chart
 @app.route('/generate_chart', methods=['POST'])
 def generate_chart():
-    # Collect values from the form (Culture, Projet, Équipe)
+    # Récupérer les valeurs des critères via le formulaire
+    adhesion = float(request.form['adhesion'])
+    confiance = float(request.form['confiance'])
+    prise_decision = float(request.form['prise_decision'])
+
+    changement = float(request.form['changement'])
+    criticite = float(request.form['criticite'])
+    livraison = float(request.form['livraison'])
+
+    taille_equipe = float(request.form['taille_equipe'])
+    experience = float(request.form['experience'])
+    acces = float(request.form['acces'])
+
+    # Les catégories et leurs critères
+    categories = [
+        'Adhésion', 'Confiance', 'Prise de décision',  # Culture
+        'Changement', 'Criticité', 'Livraison',  # Projet
+        'Taille de l\'équipe', 'Expérience', 'Accès'  # Équipe
+    ]
     
-    # Category 1: Culture
-    culture_values = [
-        float(request.form['adhesion']),
-        float(request.form['confiance']),
-        float(request.form['prise_decision'])
-    ]
-    culture_labels = ['Adhésion', 'Confiance', 'Prise de décision']
+    # Diviser en catégories pour le cercle externe
+    category_labels = ['Culture', 'Projet', 'Équipe']
+    category_boundaries = [0, 3, 6, 9]  # Les limites des catégories
 
-    # Category 2: Projet
-    projet_values = [
-        float(request.form['changement']),
-        float(request.form['criticite']),
-        float(request.form['livraison'])
-    ]
-    projet_labels = ['Changement', 'Criticité', 'Livraison']
+    n_categories = len(categories)
 
-    # Category 3: Équipe
-    equipe_values = [
-        float(request.form['taille_equipe']),
-        float(request.form['experience']),
-        float(request.form['acces'])
-    ]
-    equipe_labels = ['Taille de l\'équipe', 'Expérience', 'Accès']
+    # Valeurs saisies pour les critères
+    values = [adhesion, confiance, prise_decision, changement, criticite, livraison, taille_equipe, experience, acces]
+    values += values[:1]  # Boucler pour fermer le radar chart
 
-    # Combine all values and labels into a single form
-    all_values = culture_values + projet_values + equipe_values
-    all_labels = culture_labels + projet_labels + equipe_labels
+    # Calcul des angles pour chaque critère
+    angles = [n / float(n_categories) * 2 * pi for n in range(n_categories)]
+    angles += angles[:1]
 
-    # Create radar chart with Plotly
-    fig = go.Figure()
+    # Création du radar chart
+    fig, ax = plt.subplots(figsize=(6, 6), subplot_kw=dict(polar=True))
 
-    # Add a single trace that connects all criteria from all categories
-    fig.add_trace(go.Scatterpolar(
-        r=all_values,
-        theta=all_labels,
-        fill='toself',
-        name='Critères'
-    ))
+    # Dessiner le radar chart
+    ax.fill(angles, values, color='b', alpha=0.25)
+    ax.plot(angles, values, color='b', linewidth=2)
 
-    # Configure the layout of the radar chart
-    fig.update_layout(
-        polar=dict(
-            radialaxis=dict(visible=True, range=[0, 10]),
-            angularaxis=dict(rotation=90)  # Start from the top of the chart
-        ),
-        showlegend=False,
-    )
+    # Configuration des axes
+    ax.set_yticklabels([])  # Masquer les étiquettes radiales
+    ax.set_xticks(angles[:-1])
+    ax.set_xticklabels(categories, size=10)
 
-    # Variables for the circle external radius and divisions
-    outer_radius = 1.2  # Slightly larger than the radar chart
-    n_criteria = len(all_labels)
-    angle_step = 360 / n_criteria
+    # Ajout d'un cercle externe segmenté avec des labels de catégories
+    circle_radius = 1.2
+    for i, angle in enumerate(angles[:-1]):
+        x = circle_radius * np.cos(angle)
+        y = circle_radius * np.sin(angle)
 
-    # Add shapes for the external circle divided into 9 segments
-    shapes = []
-    for i in range(n_criteria):
-        start_angle = i * angle_step - 90  # Adjust to start from the top
-        end_angle = start_angle + angle_step
-        
-        # Convert angles to radians for the trigonometric functions
-        start_angle_rad = math.radians(start_angle)
-        end_angle_rad = math.radians(end_angle)
-        
-        # Draw each segment of the outer circle using line shapes
-        shapes.append(dict(
-            type="path",
-            path=f"M {0.5 + outer_radius * math.cos(start_angle_rad)} {0.5 + outer_radius * math.sin(start_angle_rad)} "
-                 f"A {outer_radius} {outer_radius} 0 0,1 {0.5 + outer_radius * math.cos(end_angle_rad)} {0.5 + outer_radius * math.sin(end_angle_rad)}",
-            line=dict(color="Black", width=2),
-            xref="paper", yref="paper"
-        ))
+        rotation = np.degrees(angle) if np.degrees(angle) < 180 else np.degrees(angle) + 180
+        ha = 'left' if np.degrees(angle) < 180 else 'right'
 
-    # Add the labels for each criterion in the corresponding section
-    annotations = []
-    for i, label in enumerate(all_labels):
-        angle = (i * angle_step) - 90  # Adjust starting from top
-        angle_rad = math.radians(angle)
+        ax.text(x, y, categories[i], horizontalalignment=ha, size=12, verticalalignment='center', 
+                rotation=rotation, rotation_mode='anchor')
 
-        x = 0.5 + (outer_radius + 0.05) * math.cos(angle_rad)  # Move the label slightly outside the circle
-        y = 0.5 + (outer_radius + 0.05) * math.sin(angle_rad)
+    # Dessiner le cercle externe segmenté pour les catégories
+    for i in range(len(category_labels)):
+        start_idx = category_boundaries[i]
+        end_idx = category_boundaries[i + 1] if i + 1 < len(category_boundaries) else len(categories)
 
-        # Rotate the text for better readability
-        textangle = angle if angle >= -90 and angle <= 90 else angle + 180
+        mid_angle = np.mean([angles[start_idx], angles[end_idx - 1]])
+        x = (circle_radius + 0.2) * np.cos(mid_angle)
+        y = (circle_radius + 0.2) * np.sin(mid_angle)
 
-        annotations.append(
-            dict(
-                x=x, y=y,
-                xref="paper", yref="paper",
-                text=label,
-                showarrow=False,
-                font=dict(size=12),
-                align="center",
-                textangle=textangle
-            )
-        )
+        ax.text(x, y, category_labels[i], horizontalalignment='center', size=14, verticalalignment='center', 
+                bbox=dict(facecolor='white', edgecolor='black', boxstyle='round,pad=0.3'))
 
-    # Update the layout with the external circle and labels
-    fig.update_layout(
-        shapes=shapes,
-        annotations=annotations
-    )
+    # Sauvegarde de l'image dans un buffer
+    img = io.BytesIO()
+    plt.savefig(img, format='png')
+    img.seek(0)
 
-    # Save the chart as an image
-    img_path = "static/images/radar_chart.png"
-    pio.write_image(fig, img_path)
+    # Fermer la figure pour libérer la mémoire
+    plt.close(fig)
 
-    return render_template('index.html', image_path=img_path, values=all_values)
+    return send_file(img, mimetype='image/png')
 
 if __name__ == '__main__':
     app.run(debug=True)
-from flask import Flask, render_template, request
-import plotly.graph_objs as go
-import plotly.io as pio
-import math
-
-app = Flask(__name__)
-
-@app.route('/')
-def index():
-    return render_template('index.html')
-
-@app.route('/generate_chart', methods=['POST'])
-def generate_chart():
-    # Collect values from the form (Culture, Projet, Équipe)
-    
-    # Category 1: Culture
-    culture_values = [
-        float(request.form['adhesion']),
-        float(request.form['confiance']),
-        float(request.form['prise_decision'])
-    ]
-    culture_labels = ['Adhésion', 'Confiance', 'Prise de décision']
-
-    # Category 2: Projet
-    projet_values = [
-        float(request.form['changement']),
-        float(request.form['criticite']),
-        float(request.form['livraison'])
-    ]
-    projet_labels = ['Changement', 'Criticité', 'Livraison']
-
-    # Category 3: Équipe
-    equipe_values = [
-        float(request.form['taille_equipe']),
-        float(request.form['experience']),
-        float(request.form['acces'])
-    ]
-    equipe_labels = ['Taille de l\'équipe', 'Expérience', 'Accès']
-
-    # Combine all values and labels into a single form
-    all_values = culture_values + projet_values + equipe_values
-    all_labels = culture_labels + projet_labels + equipe_labels
-
-    # Create radar chart with Plotly
-    fig = go.Figure()
-
-    # Add a single trace that connects all criteria from all categories
-    fig.add_trace(go.Scatterpolar(
-        r=all_values,
-        theta=all_labels,
-        fill='toself',
-        name='Critères'
-    ))
-
-    # Configure the layout of the radar chart
-    fig.update_layout(
-        polar=dict(
-            radialaxis=dict(visible=True, range=[0, 10]),
-            angularaxis=dict(rotation=90)  # Start from the top of the chart
-        ),
-        showlegend=False,
-    )
-
-    # Variables for the circle external radius and divisions
-    outer_radius = 1.2  # Slightly larger than the radar chart
-    n_criteria = len(all_labels)
-    angle_step = 360 / n_criteria
-
-    # Add shapes for the external circle divided into 9 segments
-    shapes = []
-    for i in range(n_criteria):
-        start_angle = i * angle_step - 90  # Adjust to start from the top
-        end_angle = start_angle + angle_step
-        
-        # Convert angles to radians for the trigonometric functions
-        start_angle_rad = math.radians(start_angle)
-        end_angle_rad = math.radians(end_angle)
-        
-        # Draw each segment of the outer circle using line shapes
-        shapes.append(dict(
-            type="path",
-            path=f"M {0.5 + outer_radius * math.cos(start_angle_rad)} {0.5 + outer_radius * math.sin(start_angle_rad)} "
-                 f"A {outer_radius} {outer_radius} 0 0,1 {0.5 + outer_radius * math.cos(end_angle_rad)} {0.5 + outer_radius * math.sin(end_angle_rad)}",
-            line=dict(color="Black", width=2),
-            xref="paper", yref="paper"
-        ))
-
-    # Add the labels for each criterion in the corresponding section
-    annotations = []
-    for i, label in enumerate(all_labels):
-        angle = (i * angle_step) - 90  # Adjust starting from top
-        angle_rad = math.radians(angle)
-
-        x = 0.5 + (outer_radius + 0.05) * math.cos(angle_rad)  # Move the label slightly outside the circle
-        y = 0.5 + (outer_radius + 0.05) * math.sin(angle_rad)
-
-        # Rotate the text for better readability
-        textangle = angle if angle >= -90 and angle <= 90 else angle + 180
-
-        annotations.append(
-            dict(
-                x=x, y=y,
-                xref="paper", yref="paper",
-                text=label,
-                showarrow=False,
-                font=dict(size=12),
-                align="center",
-                textangle=textangle
-            )
-        )
-
-    # Update the layout with the external circle and labels
-    fig.update_layout(
-        shapes=shapes,
-        annotations=annotations
-    )
-
-    # Save the chart as an image
-    img_path = "static/images/radar_chart.png"
-    pio.write_image(fig, img_path)
-
-    return render_template('index.html', image_path=img_path, values=all_values)
-
-if __name__ == '__main__':
-    app.run()
