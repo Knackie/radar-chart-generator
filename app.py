@@ -78,8 +78,7 @@ def generate_chart():
     ax.set_yticks(range(1, 11))  # Afficher les cercles de 1 à 10 uniquement pour les valeurs
     ax.set_yticklabels([str(i) for i in range(1, 11)])  # Afficher les labels des cercles
     ax.set_xticks([])  # Retirer les labels du diagramme
-    ax.set_yticklabels([])  # Ne pas afficher les labels des cercles (pour éviter l'encombrement)
-
+    
     # Supprimer les lignes indésirables (par exemple des lignes radiales entre certaines valeurs)
     for spine in ax.spines.values():
         spine.set_visible(False)  # Masquer les lignes radiales
