@@ -60,7 +60,6 @@ def generate_chart():
     ax.fill(angles, values, color='b', alpha=0.25)
     ax.plot(angles, values, color='b', linewidth=2)
 
-    # Correction pour assurer une répartition correcte des segments de cercle
     # Coloration des sections des cercles 11 et 12 en fonction des catégories
     for idx, (start, end) in enumerate(category_bounds):
         color = colors_by_category[idx]
@@ -85,9 +84,9 @@ def generate_chart():
         mid_angle = np.mean(angles[start:end])
         ax.plot([mid_angle, mid_angle], [11, 12], color='black', linewidth=2)  # Lignes entre 11 et 12
 
-    # --- Ajouter les valeurs des critères dans la zone 11 ---
+    # --- Ajouter les valeurs des critères dans la zone 11 avec une rotation de 90° chacun ---
     for i, angle in enumerate(angles[:-1]):
-        rotation_angle = np.degrees(angle)  # Convertir en degrés pour l'inclinaison
+        rotation_angle = np.degrees(angle) + 90  # Ajouter 90° de rotation pour chaque critère
         ha = 'center'  # Centrer horizontalement
         if 90 < rotation_angle < 270:  # Ajuster pour les textes au bas du cercle
             rotation_angle += 180
@@ -96,7 +95,7 @@ def generate_chart():
     # --- Ajouter les catégories dans la zone 12 ---
     for i, (start, end) in enumerate(category_bounds):
         mid_angle = np.mean(angles[start:end])
-        rotation_angle = np.degrees(mid_angle)  # Convertir en degrés pour l'inclinaison
+        rotation_angle = np.degrees(mid_angle) + 90  # Ajouter 90° de rotation
         ha = 'center'  # Centrer horizontalement
         if 90 < rotation_angle < 270:  # Ajuster pour les textes au bas du cercle
             rotation_angle += 180
