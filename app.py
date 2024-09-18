@@ -75,14 +75,16 @@ def generate_chart():
     ax.set_yticklabels([str(i) for i in range(1, 11)])  # Afficher les labels des cercles
     ax.set_xticks([])  # Retirer les labels du diagramme
 
-    # --- Diviser le cercle 11 en 9 morceaux (avec un décalage de 20° pour les traits) ---
-    for angle in angles[:-1]:
-        ax.plot([angle, angle], [10, 11], color='black', linewidth=2)  # Lignes entre 10 et 11
+    # --- Déplacer les traits des critères (cercle 11) de 20° ---
+    for i, angle in enumerate(angles[:-1]):
+        adjusted_angle = angle + np.radians(20)  # Décalage de 20° en radians
+        ax.plot([adjusted_angle, adjusted_angle], [10, 11], color='black', linewidth=2)  # Lignes entre 10 et 11
 
-    # --- Diviser le cercle 12 en 3 morceaux (avec un décalage de 60° pour les traits) ---
+    # --- Déplacer les traits des catégories (cercle 12) de 20° ---
     for start, end in category_bounds:
         mid_angle = np.mean(angles[start:end])
-        ax.plot([mid_angle, mid_angle], [11, 12], color='black', linewidth=2)  # Lignes entre 11 et 12
+        adjusted_angle = mid_angle + np.radians(20)  # Décalage de 20° en radians
+        ax.plot([adjusted_angle, adjusted_angle], [11, 12], color='black', linewidth=2)  # Lignes entre 11 et 12
 
     # --- Ajouter les valeurs des critères dans la zone 11 ---
     for i, angle in enumerate(angles[:-1]):
