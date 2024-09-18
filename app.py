@@ -60,18 +60,33 @@ def generate_chart():
     ax.fill(angles, values, color='b', alpha=0.25)
     ax.plot(angles, values, color='b', linewidth=2)
 
-    # --- Correction des couleurs et des angles pour les catégories ---
+    # --- Décaler la partie verte (Équipe) et la partie violette (Projet) de 20° à droite ---
     for idx, (start, end) in enumerate(category_bounds):
         color = colors_by_category[idx]
-        for i in range(start, end):
-            adjusted_angle_start = angles[i]  # Pas de décalage ici pour les critères
-            adjusted_angle_end = angles[i + 1]
-            ax.fill_between(np.linspace(adjusted_angle_start, adjusted_angle_end, 100), 10, 11, color=color, alpha=0.4)
+        if categories[idx] == 'Équipe' or categories[idx] == 'Projet':
+            # Décaler les angles pour les catégories "Équipe" (vert) et "Projet" (violet) de 20° à droite
+            for i in range(start, end):
+                adjusted_angle_start = angles[i] + np.radians(20)
+                adjusted_angle_end = angles[i + 1] + np.radians(20)
+                ax.fill_between(np.linspace(adjusted_angle_start, adjusted_angle_end, 100), 10, 11, color=color, alpha=0.4)
+        else:
+            # Aucune modification pour les autres catégories
+            for i in range(start, end):
+                adjusted_angle_start = angles[i]
+                adjusted_angle_end = angles[i + 1]
+                ax.fill_between(np.linspace(adjusted_angle_start, adjusted_angle_end, 100), 10, 11, color=color, alpha=0.4)
 
-        # Remplir correctement chaque catégorie dans le cercle externe
-        adjusted_angle_start = angles[start]
-        adjusted_angle_end = angles[end]
-        ax.fill_between(np.linspace(adjusted_angle_start, adjusted_angle_end, 100), 11, 12, color=color, alpha=0.4)
+    # Remplir correctement chaque catégorie dans le cercle externe
+    for idx, (start, end) in enumerate(category_bounds):
+        color = colors_by_category[idx]
+        if categories[idx] == 'Équipe' or categories[idx] == 'Projet':
+            adjusted_angle_start = angles[start] + np.radians(20)
+            adjusted_angle_end = angles[end] + np.radians(20)
+            ax.fill_between(np.linspace(adjusted_angle_start, adjusted_angle_end, 100), 11, 12, color=color, alpha=0.4)
+        else:
+            adjusted_angle_start = angles[start]
+            adjusted_angle_end = angles[end]
+            ax.fill_between(np.linspace(adjusted_angle_start, adjusted_angle_end, 100), 11, 12, color=color, alpha=0.4)
 
     # Configuration des axes (échelle de 0 à 10)
     ax.set_ylim(0, 12)  # Ajustement pour inclure les cercles externes
@@ -99,31 +114,4 @@ def generate_chart():
             rotation_angle += 180
 
         # Ajouter le texte du critère avec l'angle correct
-        ax.text(angle, 11, criteria[i], rotation=rotation_angle, ha=ha, va='center', size=10, weight='bold')
-
-    # --- Ajouter les catégories dans la zone 12 ---
-    for i, (start, end) in enumerate(category_bounds):
-        mid_angle = np.mean(angles[start:end])
-        rotation_angle = np.degrees(mid_angle) + 90  # Ajouter 90° de rotation pour chaque catégorie
-
-        # Appliquer un décalage spécifique de 20° vers la droite pour "Équipe" et "Projet"
-        if categories[i] == 'Équipe' or categories[i] == 'Projet':
-            mid_angle += np.radians(20)
-
-        ha = 'center'  # Centrer horizontalement
-        if 90 < rotation_angle < 270:  # Ajuster pour les textes au bas du cercle
-            rotation_angle += 180
-        ax.text(mid_angle, 12, categories[i], rotation=rotation_angle, ha=ha, va='center', size=12, weight='bold')
-
-    # Sauvegarde de l'image dans un buffer
-    img = io.BytesIO()
-    plt.savefig(img, format='png')
-    img.seek(0)
-
-    # Fermer la figure pour libérer la mémoire
-    plt.close(fig)
-
-    return send_file(img, mimetype='image/png')
-
-if __name__ == '__main__':
-    app.run(debug=True)
+        ax.text(angle, 11, criteria[i], rotation=rotation_angle, ha=ha, va='center', size=10, weight='b
