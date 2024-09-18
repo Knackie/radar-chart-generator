@@ -51,47 +51,23 @@ def generate_chart():
     # Création du radar chart
     fig, ax = plt.subplots(figsize=(8, 8), subplot_kw=dict(polar=True))
 
-    # Dessiner le radar chart
+    # Dessiner le radar chart avec les valeurs
     ax.fill(angles, values, color='b', alpha=0.25)
     ax.plot(angles, values, color='b', linewidth=2)
 
-    # Configuration des axes
-    ax.set_ylim(0, 10)  # Échelle du radar chart de 0 à 10
-    ax.set_yticks(range(1, 11))  # Cercles de 1 à 10
-    ax.set_yticklabels([str(i) for i in range(1, 11)])  # Affichage des unités 1 à 10
-    ax.set_xticks([])  # Masquer les labels dans le diagramme
+    # Configuration des axes (échelle de 0 à 10)
+    ax.set_ylim(0, 10)
+    ax.set_xticks([])  # Retirer les labels du diagramme
 
-    # --- Ajout des labels pour les zones "Agile", "Hybride" et "Prédictive" ---
-    ax.text(0, 2, 'Agile', horizontalalignment='center', verticalalignment='center', size=14, bbox=dict(facecolor='white', edgecolor='black'))
-    ax.text(0, 6, 'Hybride', horizontalalignment='center', verticalalignment='center', size=14, bbox=dict(facecolor='white', edgecolor='black'))
-    ax.text(0, 9, 'Prédictive', horizontalalignment='center', verticalalignment='center', size=14, bbox=dict(facecolor='white', edgecolor='black'))
+    # Couleurs pour les segments Agile (0-4), Hybride (4-8), Prédictive (8-10)
+    ax.fill_between(np.linspace(0, 2 * pi, 100), 0, 4, color='green', alpha=0.2)  # Agile (vert)
+    ax.fill_between(np.linspace(0, 2 * pi, 100), 4, 8, color='yellow', alpha=0.2)  # Hybride (jaune)
+    ax.fill_between(np.linspace(0, 2 * pi, 100), 8, 10, color='red', alpha=0.2)  # Prédictive (rouge)
 
-    # Ajustement du rayon des cercles externes
-    criteria_radius = 11  # Rayon pour placer les critères en dehors du radar chart
-    category_radius = 13  # Rayon pour placer les catégories en dehors du radar chart
-
-    # Ajouter les labels des critères dans le cercle externe des critères
-    for i, angle in enumerate(angles[:-1]):
-        # Calcul des positions en coordonnées polaires
-        x = criteria_radius * np.cos(angle)
-        y = criteria_radius * np.sin(angle)
-
-        ax.text(x, y, categories[i], horizontalalignment='center', verticalalignment='center', size=12)
-
-    # Ajouter les labels des catégories dans le cercle externe des catégories
-    for i in range(len(category_labels)):
-        start_idx = category_boundaries[i]
-        end_idx = category_boundaries[i + 1] if i + 1 < len(category_boundaries) else len(categories)
-
-        # Calculer l'angle moyen pour les catégories
-        mid_angle = np.mean([angles[start_idx], angles[end_idx - 1]])
-
-        # Calcul des positions en coordonnées polaires pour les catégories
-        x = category_radius * np.cos(mid_angle)
-        y = category_radius * np.sin(mid_angle)
-
-        ax.text(x, y, category_labels[i], horizontalalignment='center', verticalalignment='center', size=14, 
-                bbox=dict(facecolor='white', edgecolor='black', boxstyle='round,pad=0.3'))
+    # Ajouter les titres "Agile", "Hybride", "Prédictive" au bord du cercle
+    ax.text(0, 4, 'Agile', horizontalalignment='center', verticalalignment='bottom', size=14)
+    ax.text(0, 8, 'Hybride', horizontalalignment='center', verticalalignment='bottom', size=14)
+    ax.text(0, 10, 'Prédictive', horizontalalignment='center', verticalalignment='bottom', size=14)
 
     # Sauvegarde de l'image dans un buffer
     img = io.BytesIO()
