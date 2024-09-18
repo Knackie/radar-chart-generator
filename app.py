@@ -60,8 +60,8 @@ def generate_chart():
     ax.set_xticks([])  # Masquer les labels dans le diagramme
 
     # --- Ajustement des rayons des cercles externes ---
-    criteria_radius = 1.5  # Premier cercle externe pour les critères
-    category_radius = 1.8  # Second cercle externe pour les catégories
+    criteria_radius = 2.0  # Premier cercle externe pour les critères
+    category_radius = 2.3  # Second cercle externe pour les catégories
 
     # --- Ajouter les labels des critères dans le cercle externe des critères ---
     for i, angle in enumerate(angles[:-1]):
