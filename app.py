@@ -45,6 +45,10 @@ def generate_chart():
     angles = [n / float(n_criteria) * 2 * pi for n in range(n_criteria)]
     angles += angles[:1]
 
+    # Décalage en radians
+    offset_20_degrees = np.radians(20)
+    offset_60_degrees = np.radians(60)
+
     # Création du radar chart
     fig, ax = plt.subplots(figsize=(8, 8), subplot_kw=dict(polar=True))
 
@@ -67,23 +71,23 @@ def generate_chart():
     ax.set_yticklabels([str(i) for i in range(1, 11)])  # Afficher les labels des cercles
     ax.set_xticks([])  # Retirer les labels du diagramme
 
-    # --- Diviser le cercle 11 en 9 morceaux ---
+    # --- Diviser le cercle 11 en 9 morceaux (avec un décalage de 20°) ---
     for angle in angles[:-1]:
-        ax.plot([angle, angle], [10, 11], color='black', linewidth=2)  # Lignes entre 10 et 11
+        ax.plot([angle + offset_20_degrees, angle + offset_20_degrees], [10, 11], color='black', linewidth=2)  # Lignes entre 10 et 11
 
-    # --- Diviser le cercle 12 en 3 morceaux (pour les catégories) ---
+    # --- Diviser le cercle 12 en 3 morceaux (avec un décalage de 60°) ---
     for start, end in category_bounds:
         mid_angle = np.mean(angles[start:end])
-        ax.plot([mid_angle, mid_angle], [11, 12], color='black', linewidth=2)  # Lignes entre 11 et 12
+        ax.plot([mid_angle + offset_60_degrees, mid_angle + offset_60_degrees], [11, 12], color='black', linewidth=2)  # Lignes entre 11 et 12
 
     # --- Ajouter les valeurs des critères dans la zone 11 ---
     for i, angle in enumerate(angles[:-1]):
-        ax.text(angle, 11, criteria[i], horizontalalignment='center', verticalalignment='center', size=10, weight='bold')
+        ax.text(angle + offset_20_degrees, 11, criteria[i], horizontalalignment='center', verticalalignment='center', size=10, weight='bold')
 
     # --- Ajouter les catégories dans la zone 12 ---
     for i, (start, end) in enumerate(category_bounds):
         mid_angle = np.mean(angles[start:end])
-        ax.text(mid_angle, 12, categories[i], horizontalalignment='center', verticalalignment='center', size=12, weight='bold')
+        ax.text(mid_angle + offset_60_degrees, 12, categories[i], horizontalalignment='center', verticalalignment='center', size=12, weight='bold')
 
     # Sauvegarde de l'image dans un buffer
     img = io.BytesIO()
