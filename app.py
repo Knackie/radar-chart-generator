@@ -98,8 +98,8 @@ def generate_chart():
         if 90 < rotation_angle < 270:  # Ajuster pour les textes au bas du cercle
             rotation_angle += 180
 
-        # Ajouter le texte du critère avec l'angle correct
-        ax.text(angle, 11, criteria[i], rotation=rotation_angle, ha=ha, va='center', size=10, weight='bold')
+        # Ajouter le texte du critère dans un cercle inférieur
+        ax.text(angle, 10.5, criteria[i], rotation=rotation_angle, ha=ha, va='center', size=10, weight='bold')  # Déplacé à 10.5 pour descendre les légendes
 
     # --- Ajouter les catégories dans la zone 12 ---
     for i, (start, end) in enumerate(category_bounds):
@@ -109,7 +109,7 @@ def generate_chart():
         ha = 'center'  # Centrer horizontalement
         if 90 < rotation_angle < 270:  # Ajuster pour les textes au bas du cercle
             rotation_angle += 180
-        ax.text(mid_angle, 12, categories[i], rotation=rotation_angle, ha=ha, va='center', size=12, weight='bold')
+        ax.text(mid_angle, 11.5, categories[i], rotation=rotation_angle, ha=ha, va='center', size=12, weight='bold')  # Déplacé à 11.5 pour descendre les légendes
 
     # Sauvegarde de l'image dans un buffer
     img = io.BytesIO()
