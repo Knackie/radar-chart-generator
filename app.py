@@ -56,9 +56,15 @@ def generate_chart():
     ax.plot(angles, values, color='b', linewidth=2)
 
     # Configuration des axes
-    ax.set_yticklabels(['2', '4', '6', '8', '10'])  # Ajuster les étiquettes radiales
-    ax.set_ylim(0, 10)  # Ajuster l'échelle pour aller jusqu'à 10
+    ax.set_ylim(0, 10)  # Échelle du radar chart de 0 à 10
+    ax.set_yticks(range(1, 11))  # Cercles de 1 à 10
+    ax.set_yticklabels([str(i) for i in range(1, 11)])  # Affichage des unités 1 à 10
     ax.set_xticks([])  # Masquer les labels dans le diagramme
+
+    # --- Ajout des labels pour les zones "Agile", "Hybride" et "Prédictive" ---
+    ax.text(0, 2, 'Agile', horizontalalignment='center', verticalalignment='center', size=14, bbox=dict(facecolor='white', edgecolor='black'))
+    ax.text(0, 6, 'Hybride', horizontalalignment='center', verticalalignment='center', size=14, bbox=dict(facecolor='white', edgecolor='black'))
+    ax.text(0, 9, 'Prédictive', horizontalalignment='center', verticalalignment='center', size=14, bbox=dict(facecolor='white', edgecolor='black'))
 
     # Ajustement du rayon des cercles externes
     criteria_radius = 11  # Rayon pour placer les critères en dehors du radar chart
