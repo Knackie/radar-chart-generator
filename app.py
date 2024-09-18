@@ -34,9 +34,9 @@ def generate_chart():
         'Taille de l\'équipe', 'Expérience', 'Accès'  # Équipe
     ]
     
-    # Diviser en catégories pour le cercle externe
+    # Catégories pour le cercle externe
     category_labels = ['Culture', 'Projet', 'Équipe']
-    category_boundaries = [0, 3, 6, 9]  # Limites des catégories (indices dans le tableau de critères)
+    category_boundaries = [0, 3, 6, 9]  # Limites des catégories
 
     n_categories = len(categories)
 
@@ -49,7 +49,7 @@ def generate_chart():
     angles += angles[:1]
 
     # Création du radar chart
-    fig, ax = plt.subplots(figsize=(6, 6), subplot_kw=dict(polar=True))
+    fig, ax = plt.subplots(figsize=(8, 8), subplot_kw=dict(polar=True))
 
     # Dessiner le radar chart
     ax.fill(angles, values, color='b', alpha=0.25)
@@ -57,32 +57,33 @@ def generate_chart():
 
     # Configuration des axes
     ax.set_yticklabels([])  # Masquer les étiquettes radiales
-    ax.set_xticks(angles[:-1])
-    ax.set_xticklabels([])  # Masquer les labels dans le diagramme
+    ax.set_xticks([])  # Masquer les labels dans le diagramme
 
-    # Ajouter des labels dans le cercle externe
-    circle_radius = 1.2
+    # Rayon pour le cercle externe des critères
+    criteria_radius = 1.1
+
+    # Ajouter des labels des critères dans le cercle externe des critères
     for i, angle in enumerate(angles[:-1]):
-        x = circle_radius * np.cos(angle)
-        y = circle_radius * np.sin(angle)
+        x = criteria_radius * np.cos(angle)
+        y = criteria_radius * np.sin(angle)
 
-        # Placement des labels dans le cercle externe
-        rotation = np.degrees(angle) if np.degrees(angle) < 180 else np.degrees(angle) + 180
-        ha = 'left' if np.degrees(angle) < 180 else 'right'
+        # Placer les critères autour du cercle externe
+        ax.text(x, y, categories[i], horizontalalignment='center', verticalalignment='center', size=12)
 
-        ax.text(x, y, categories[i], horizontalalignment=ha, size=12, verticalalignment='center', 
-                rotation=rotation, rotation_mode='anchor')
+    # Rayon pour le cercle externe des catégories
+    category_radius = 1.3
 
-    # Dessiner le cercle externe segmenté pour les catégories
+    # Dessiner les catégories dans le cercle externe des catégories
     for i in range(len(category_labels)):
         start_idx = category_boundaries[i]
         end_idx = category_boundaries[i + 1] if i + 1 < len(category_boundaries) else len(categories)
 
         mid_angle = np.mean([angles[start_idx], angles[end_idx - 1]])
-        x = (circle_radius + 0.2) * np.cos(mid_angle)
-        y = (circle_radius + 0.2) * np.sin(mid_angle)
+        x = category_radius * np.cos(mid_angle)
+        y = category_radius * np.sin(mid_angle)
 
-        ax.text(x, y, category_labels[i], horizontalalignment='center', size=14, verticalalignment='center', 
+        # Placer les noms des catégories dans le cercle externe
+        ax.text(x, y, category_labels[i], horizontalalignment='center', verticalalignment='center', size=14, 
                 bbox=dict(facecolor='white', edgecolor='black', boxstyle='round,pad=0.3'))
 
     # Sauvegarde de l'image dans un buffer
