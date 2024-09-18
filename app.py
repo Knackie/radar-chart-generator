@@ -1,7 +1,7 @@
 from flask import Flask, render_template, request, send_file
 import matplotlib.pyplot as plt
 import numpy as np
-from math import pi
+from math import pi, cos, sin
 import io
 
 app = Flask(__name__)
@@ -60,15 +60,15 @@ def generate_chart():
     ax.set_xticks([])  # Masquer les labels dans le diagramme
 
     # --- Ajustement des rayons des cercles externes ---
-    criteria_radius = 2.0  # Premier cercle externe pour les critères
-    category_radius = 2.3  # Second cercle externe pour les catégories
+    criteria_radius = 1.8  # Rayon ajusté pour les critères
+    category_radius = 2.1  # Rayon ajusté pour les catégories
 
     # --- Ajouter les labels des critères dans le cercle externe des critères ---
     for i, angle in enumerate(angles[:-1]):
         x = criteria_radius * np.cos(angle)
         y = criteria_radius * np.sin(angle)
 
-        # Utiliser ax.text pour placer les critères autour du cercle
+        # Utiliser ax.text pour placer les critères autour du cercle externe
         ax.text(angle, criteria_radius, categories[i], horizontalalignment='center', verticalalignment='center', size=12)
 
     # --- Ajouter les labels des catégories dans le cercle externe des catégories ---
