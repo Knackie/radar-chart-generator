@@ -1,7 +1,7 @@
 from flask import Flask, render_template, request, send_file
 import matplotlib.pyplot as plt
 import numpy as np
-from math import pi
+from math import pi, cos, sin
 import io
 
 app = Flask(__name__)
@@ -60,16 +60,13 @@ def generate_chart():
     ax.set_xticks([])  # Masquer les labels dans le diagramme
 
     # Ajustement du rayon des cercles externes
-    criteria_radius = 2.0  # Premier cercle externe pour les critères
-    category_radius = 2.5  # Second cercle externe pour les catégories
+    criteria_radius = 2.0  # Rayon ajusté pour les critères
+    category_radius = 2.5  # Rayon ajusté pour les catégories
 
     # Ajouter les labels des critères dans le cercle externe des critères
     for i, angle in enumerate(angles[:-1]):
-        x = criteria_radius * np.cos(angle)
-        y = criteria_radius * np.sin(angle)
-
-        # Utiliser ax.text pour placer les critères autour du cercle externe
-        ax.text(x, y, categories[i], horizontalalignment='center', verticalalignment='center', size=12, transform=ax.transData)
+        # Transformation polaire directe pour placer correctement les étiquettes des critères
+        ax.text(angle, criteria_radius, categories[i], horizontalalignment='center', verticalalignment='center', size=12, transform=ax.transData)
 
     # Ajouter les labels des catégories dans le cercle externe des catégories
     for i in range(len(category_labels)):
@@ -79,13 +76,12 @@ def generate_chart():
         # Calcul de l'angle moyen pour positionner les labels des catégories
         mid_angle = np.mean([angles[start_idx], angles[end_idx - 1]])
 
-        # Calculer les coordonnées x et y en fonction de l'angle et du rayon
-        x = category_radius * np.cos(mid_angle)
-        y = category_radius * np.sin(mid_angle)
-
-        # Utiliser ax.text pour placer les catégories
-        ax.text(x, y, category_labels[i], horizontalalignment='center', verticalalignment='center', size=14, 
+        # Transformation polaire pour placer correctement les étiquettes des catégories
+        ax.text(mid_angle, category_radius, category_labels[i], horizontalalignment='center', verticalalignment='center', size=14, 
                 bbox=dict(facecolor='white', edgecolor='black', boxstyle='round,pad=0.3'), transform=ax.transData)
+
+    # Ajuster les limites du graphique pour éviter les étiquettes coupées
+    ax.set_ylim(0, category_radius + 0.5)
 
     # Sauvegarde de l'image dans un buffer
     img = io.BytesIO()
@@ -99,4 +95,3 @@ def generate_chart():
 
 if __name__ == '__main__':
     app.run(debug=True)
-
